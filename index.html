@@ -1,11 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <title>Test Page</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我的個人名片頁</title>
+  <style>
+    /* Reset & Base */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    /* 個人區塊 */
+    .profile {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .profile img {
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 12px;
+    }
+    .profile h1 {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+    .profile p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    /* 連結列表 */
+    .links {
+      list-style: none;
+      margin-bottom: 24px;
+    }
+    .links li + li {
+      margin-top: 12px;
+    }
+    .links a {
+      display: block;
+      text-decoration: none;
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      color: #111;
+      font-weight: 600;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .links a:hover {
+      background: #eaeaea;
+    }
+
+    /* 置入式廣告 */
+    .ad-container {
+      background: #fff;
+      padding: 12px;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      text-align: center;
+      color: #555;
+      font-size: 0.85rem;
+    }
+
+    /* 深色模式支援（可選） */
+    @media (prefers-color-scheme: dark) {
+      body { background: #1a1a1a; color: #ddd; }
+      .profile p { color: #aaa; }
+      .links a { background: #2a2a2a; color: #eee; box-shadow: 0 2px 6px rgba(0,0,0,0.5); }
+      .links a:hover { background: #3a3a3a; }
+      .ad-container {
+        background: #2a2a2a;
+        border-color: #555;
+        color: #ccc;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello World</h1>
-  <p>如果看到这句话说明 Pages 已加载正确！</p>
+  <div class="container">
+    <!-- 1. 個人資訊區 -->
+    <section class="profile">
+      <!-- 把 avatar.jpg 替換成你的大頭貼檔案 -->
+      <img src="avatar.jpg" alt="我的大頭貼">
+      <h1>你的暱稱／名字</h1>
+      <p>一句話簡短自我介紹或描述</p>
+    </section>
+
+    <!-- 2. 你的連結清單 -->
+    <ul class="links">
+      <li><a href="https://discord.gg/7wfBNYqrYU" target="_blank">Discord 社群</a></li>
+      <li><a href="https://patreon.com/USAGIPYONPYON" target="_blank">Patreon 支持</a></li>
+      <li><a href="https://lit.link/usagibyobyon" target="_blank">個人資料</a></li>
+      <!-- 如有需要，可再加更多 -->
+    </ul>
+
+    <!-- 3. 置入式廣告區塊 -->
+    <div class="ad-container">
+      <!-- 在這裡貼你的廣告程式碼（Google AdSense、Affiliate script…） -->
+      <p>🔸 置入式廣告 🔸</p>
+      <p>您的廣告內容或外部廣告代碼放在這裡</p>
+    </div>
+  </div>
 </body>
 </html>
