@@ -6,15 +6,44 @@
   <title>我的個人名片頁</title>
   <style>
     /* Reset & Base */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      height: 100%; /* 确保背景铺满全屏 */
+    }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", sans-serif;
-      background: #f5f5f5;
+      /* 淺粉色 + 明显点状纹理背景 */
+      background-color: #ffe4e9;
+      background-image:
+        radial-gradient(rgba(0,0,0,0.05) 2px, transparent 2px),
+        radial-gradient(rgba(0,0,0,0.05) 2px, transparent 2px);
+      background-size: 40px 40px;
+      background-position: 0 0, 20px 20px;
       color: #333;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
     }
+
+    /* 橫幅：滿版寬度，自適應 */
+    .banner {
+      width: 100%;
+      max-width: 800px; /* 最多到 800px，可依需求調整 */
+      margin-bottom: 20px;
+    }
+    .banner img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+    }
+
+    /* 內容容器 */
     .container {
       width: 100%;
       max-width: 400px;
@@ -26,7 +55,8 @@
       margin-bottom: 24px;
     }
     .profile img {
-      width: 100px; height: 100px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       object-fit: cover;
       margin-bottom: 12px;
@@ -45,23 +75,37 @@
       list-style: none;
       margin-bottom: 24px;
     }
-    .links li + li {
-      margin-top: 12px;
+    .links li {
+      margin-bottom: 16px;
+      text-align: center;
     }
     .links a {
-      display: block;
+      display: inline-block;
+      width: 200px;      /* 固定寬度 */
+      height: 40px;      /* 固定高度 */
+      line-height: 40px; /* 文字垂直置中 */
       text-decoration: none;
-      background: #ffffff;
-      padding: 12px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      background: #fff;
       color: #111;
       font-weight: 600;
-      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       transition: background 0.2s;
     }
     .links a:hover {
       background: #eaeaea;
+    }
+
+    /* 按鈕下方註解 */
+    .note {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #666;
+      line-height: 1.4;
+      text-align: left; /* 靠左對齊 */
+      width: 200px; /* 與按鈕同寬 */
+      margin-left: auto;
+      margin-right: auto;
     }
 
     /* 置入式廣告 */
@@ -73,14 +117,27 @@
       text-align: center;
       color: #555;
       font-size: 0.85rem;
+      margin-top: 24px;
     }
 
-    /* 深色模式支援（可選） */
+    /* 深色模式支援 */
     @media (prefers-color-scheme: dark) {
-      body { background: #1a1a1a; color: #ddd; }
-      .profile p { color: #aaa; }
-      .links a { background: #2a2a2a; color: #eee; box-shadow: 0 2px 6px rgba(0,0,0,0.5); }
-      .links a:hover { background: #3a3a3a; }
+      body {
+        background-color: #2a1a24;
+        color: #ddd;
+      }
+      .links a {
+        background: #2a2a2a;
+        color: #eee;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      }
+      .links a:hover {
+        background: #3a2a34;
+      }
+      .profile p,
+      .note {
+        color: #aaa;
+      }
       .ad-container {
         background: #2a2a2a;
         border-color: #555;
@@ -90,28 +147,77 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- 1. 個人資訊區 -->
-    <section class="profile">
-      <!-- 把 avatar.jpg 替換成你的大頭貼檔案 -->
-      <img src="avatar.jpg" alt="我的大頭貼">
-      <h1>你的暱稱／名字</h1>
-      <p>一句話簡短自我介紹或描述</p>
-    </section>
+  <!-- 1. 橫幅放這裡，滿版顯示 -->
+  <header class="banner">
+    <img src="ad6dadf1-3f23-4962-8e1f-ba16fdf585f9.png" alt="橫幅圖片">
+  </header>
 
-    <!-- 2. 你的連結清單 -->
+  <!-- 2. 其他內容限 400px 寬 -->
+  <div class="container">
+
+    <!-- 個人資訊 -->
+    <section class="profile">
+      <img src="73cb3e4c-6fed-4379-9681-9b2d3aa78b96.png" alt="我的大頭貼">
+      <h1>ぴょん</h1>
+      <p>👋 Hey there! I'm PYON 🐰</p>
+    </section>
+    
+    <!-- 連結列表 -->
     <ul class="links">
-      <li><a href="https://discord.gg/7wfBNYqrYU" target="_blank">Discord 社群</a></li>
-      <li><a href="https://patreon.com/USAGIPYONPYON" target="_blank">Patreon 支持</a></li>
-      <li><a href="https://lit.link/usagibyobyon" target="_blank">個人資料</a></li>
-      <!-- 如有需要，可再加更多 -->
+      <li>
+        <a href="https://discord.gg/7wfBNYqrYU" target="_blank">Discord</a>
+        <p class="note">
+          unpublished artworks here！<br>
+          Key member benefits are posted here upon joining！<br>
+          <br>
+          ここには未公開のラフ画などの絵が大量に入っています…！<br>
+          メンバーシップの特典も大体こちらから！<br>
+          <br>
+          這裡有大量未公開的畫作…！<br>
+          加入會員後主要的會員福利也都在這裡發布！<br>
+        </p>
+      </li>
+      <li>
+        <a href="https://patreon.com/USAGIPYONPYON" target="_blank">Patreon</a>
+        <p class="note">
+          NSFW/R18 artwork here! ・ｘ・<br>
+          <br>
+        </p>
+      </li>
+      <li>
+        <a href="https://afdian.com/a/usagipyonpyon" target="_blank">爱发电</a>
+        <p class="note">
+          Support platforms for Chinese audiences.<br>
+          中国向けの支援サイト。<br>
+          面向中國的支援網站。
+        </p>
+      </li>
+      <li>
+        <a href="https://www.pixiv.net/users/115698769" target="_blank">PIXIV</a>
+        <p class="note">
+          Support site previews here!<br>
+          支援サイトのプレビュー！<br>
+          支援網站的預覽等等的！<br>
+        </p>
+      </li>
     </ul>
 
-    <!-- 3. 置入式廣告區塊 -->
+    <!-- 置入式廣告區 -->
     <div class="ad-container">
-      <!-- 在這裡貼你的廣告程式碼（Google AdSense、Affiliate script…） -->
-      <p>🔸 置入式廣告 🔸</p>
-      <p>您的廣告內容或外部廣告代碼放在這裡</p>
+      <p>🔸 ADs 🔸</p>
+      <p>If you’d like to support me without spending money<br>
+        please kindly click the ads below—it would mean a great deal to me.<br>
+        Thank you so much!<br>
+        <br>
+        ご負担なく応援いただける場合は<br>
+        ぜひ下の広告をクリックして頂けますと嬉しいです！<br>
+        心より感謝申し上げます！<br>
+        <br>
+        如果您願意支持我但不便付費<br>
+        敬請點擊下方廣告，這將對我非常有幫助<br>
+        衷心感謝！<br>
+        <br>
+      </p>
     </div>
   </div>
 </body>
