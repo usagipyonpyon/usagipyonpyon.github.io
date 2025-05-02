@@ -12,11 +12,10 @@
       padding: 0;
     }
     html, body {
-      height: 100%; /* 确保背景铺满全屏 */
+      height: 100%;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", sans-serif;
-      /* 淺粉 + 點點背景 */
       background-color: #ffe4e9;
       background-image:
         radial-gradient(rgba(0,0,0,0.05) 2px, transparent 2px),
@@ -25,15 +24,28 @@
       background-position: 0 0, 20px 20px;
       color: #333;
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      justify-content: center;
       padding: 20px;
     }
 
-    /* 橫幅：滿版寬度，自適應 */
+    /* 三カラムレイアウト */
+    .layout {
+      display: flex;
+      width: 100%;
+      max-width: 1200px;
+    }
+    .sidebar {
+      width: 160px;
+      margin: 0 10px;
+    }
+    .main {
+      flex: 1;
+      max-width: 800px;
+    }
+
+    /* Banner */
     .banner {
       width: 100%;
-      max-width: 800px; /* 最多到 800px，可依需求調整 */
       margin-bottom: 20px;
     }
     .banner img {
@@ -43,13 +55,7 @@
       border-radius: 8px;
     }
 
-    /* 內容容器 */
-    .container {
-      width: 100%;
-      max-width: 400px;
-    }
-
-    /* 個人區塊 */
+    /* Profile */
     .profile {
       text-align: center;
       margin-bottom: 24px;
@@ -68,9 +74,10 @@
     .profile p {
       font-size: 0.9rem;
       color: #666;
+      line-height: 1.4;
     }
 
-    /* 連結列表 */
+    /* Links */
     .links {
       list-style: none;
       margin-bottom: 24px;
@@ -81,9 +88,9 @@
     }
     .links a {
       display: inline-block;
-      width: 200px;      /* 固定寬度 */
-      height: 40px;      /* 固定高度 */
-      line-height: 40px; /* 文字垂直置中 */
+      width: 200px;
+      height: 40px;
+      line-height: 40px;
       text-decoration: none;
       background: #fff;
       color: #111;
@@ -95,20 +102,18 @@
     .links a:hover {
       background: #eaeaea;
     }
-
-    /* 按鈕下方註解 */
     .note {
       margin-top: 8px;
       font-size: 0.85rem;
       color: #666;
       line-height: 1.4;
-      text-align: left; /* 靠左對齊 */
-      width: 200px; /* 與按鈕同寬 */
+      text-align: left;
+      width: 200px;
       margin-left: auto;
       margin-right: auto;
     }
 
-    /* 置入式廣告 */
+    /* Ad Container */
     .ad-container {
       background: #fff;
       padding: 12px;
@@ -117,10 +122,10 @@
       text-align: center;
       color: #555;
       font-size: 0.85rem;
-      margin-top: 24px;
+      margin-bottom: 24px;
     }
 
-    /* 深色模式支援 */
+    /* Dark Mode */
     @media (prefers-color-scheme: dark) {
       body {
         background-color: #2a1a24;
@@ -149,85 +154,123 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2920773689902115" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- 1. 橫幅放這裡，滿版顯示 -->
-  <header class="banner">
-    <img src="ad6dadf1-3f23-4962-8e1f-ba16fdf585f9.png" alt="絵">
-  </header>
+  <div class="layout">
+    <!-- 左サイドバー AD -->
+    <aside class="sidebar">
+      <div class="ad-container">
+        <!-- 左用 AdSense コード -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2920773689902115"
+             data-ad-slot="<script type="text/javascript">blogparts={"base":"https://www.dlsite.com/","type":"ranking","site":"books","query":{"period":"week","options":["-GRO","-MEN"]},"title":"漫画7日ランキング","display":"vertical","detail":"1","column":"h","image":"small","count":"10","wrapper":"1","autorotate":true,"aid":"usagipyonpyon"}</script><script type="text/javascript" src="https://www.dlsite.com/js/blogparts.js" charset="UTF-8"></script>"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+    </aside>
 
-  <!-- 2. 其他內容限 400px 寬 -->
-  <div class="container">
+    <!-- 中央メインコンテンツ -->
+    <main class="main">
+      <header class="banner">
+        <img src="ad6dadf1-3f23-4962-8e1f-ba16fdf585f9.png" alt="絵">
+      </header>
 
-    <!-- 個人資訊 -->
-    <section class="profile">
-      <img src="73cb3e4c-6fed-4379-9681-9b2d3aa78b96.png" alt="icon">
-      <h1>ぴょん</h1>
-      <p>👋 👋 Hey there! I’m PYON 🐰<br>
-I draw anime/game characters<br>
-I accept illustration commissions<br>
-furry, male, game/animation characters, and more！✨💬<br>
-<br>
-Characters:<br>
-Kaguya: blonde hair, golden eyes<br>
-Kagami: silver hair, blue eyes<br>
-<br>
-Once I secure enough support<br>
-I’ll kick off 2D Live–style animations with R18 voice acting 🎙️<br>
-<br>
-Support me on Patreon 💝 <br>
-Your help fuels more content!<br>
-
-</p>
-    </section>
-    
-    <!-- 連結列表 -->
-    <ul class="links">
-      <li>
-        <a href="https://discord.gg/7wfBNYqrYU" target="_blank">Discord</a>
-        <p class="note">
-          unpublished artworks here！<br>
-          Key member benefits are posted here upon joining！<br>
-          <br>
-          ここには未公開のラフ画などの絵が大量に入っています…！<br>
-          メンバーシップの特典も大体こちらから！<br>
-          <br>
-          這裡有大量未公開的畫作…！<br>
-          加入會員後主要的會員福利也都在這裡發布！<br>
+      <section class="profile">
+        <img src="73cb3e4c-6fed-4379-9681-9b2d3aa78b96.png" alt="icon">
+        <h1>ぴょん</h1>
+        <p>
+          👋 👋 Hey there! I’m PYON 🐰<br>
+          I draw anime/game characters<br>
+          I accept illustration commissions<br>
+          furry, male, game/animation characters, and more！✨💬<br><br>
+          Characters:<br>
+          Kaguya: blonde hair, golden eyes<br>
+          Kagami: silver hair, blue eyes<br><br>
+          Once I secure enough support<br>
+          I’ll kick off 2D Live–style animations with R18 voice acting 🎙️<br><br>
+          Support me on Patreon 💝<br>
+          Your help fuels more content!
         </p>
-      </li>
-      <li>
-        <a href="https://patreon.com/USAGIPYONPYON" target="_blank">Patreon</a>
-        <p class="note">
-          NSFW/R18 artwork here! ・ｘ・<br>
-          <br>
-        </p>
-      </li>
-      <li>
-        <a href="https://afdian.com/a/usagipyonpyon" target="_blank">爱发电</a>
-        <p class="note">
-          Support for Chinese audiences！<br>
-          中国向けの支援サイト！<br>
-          中國的支援網站！
-        </p>
-      </li>
-      <li>
-        <a href="https://www.pixiv.net/users/115698769" target="_blank">PIXIV</a>
-        <p class="note">
-          Support site previews here!<br>
-          支援サイトのプレビュー！<br>
-          支援網站的預覽等等的！<br>
-        </p>
-      </li>
-    </ul>
+      </section>
 
-    <!-- 置入式廣告區 -->
-    <div class="ad-container">
-      <p>🔸 ADs 🔸</p>
-      <p> ※以下のサイト経由で購入すると、紹介料を頂けます！<br>
+      <ul class="links">
+        <li>
+          <a href="https://discord.gg/7wfBNYqrYU" target="_blank">Discord</a>
+          <p class="note">
+            unpublished artworks here！<br>
+            Key member benefits are posted here upon joining！<br><br>
+            ここには未公開のラフ画などの絵が大量に入っています…！<br>
+            メンバーシップの特典も大体こちらから！<br><br>
+            這裡有大量未公開的畫作…！<br>
+            加入會員後主要的會員福利也都在這裡發布！
+          </p>
+        </li>
+        <li>
+          <a href="https://patreon.com/USAGIPYONPYON" target="_blank">Patreon</a>
+          <p class="note">
+            NSFW/R18 artwork here! ・ｘ・
+          </p>
+        </li>
+        <li>
+          <a href="https://afdian.com/a/usagipyonpyon" target="_blank">爱发电</a>
+          <p class="note">
+            Support for Chinese audiences！<br>
+            中国向けの支援サイト！<br>
+            中國的支援網站！
+          </p>
+        </li>
+        <li>
+          <a href="https://www.pixiv.net/users/115698769" target="_blank">PIXIV</a>
+          <p class="note">
+            Support site previews here!<br>
+            支援サイトのプレビュー！<br>
+            支援網站的預覽等等的！
+          </p>
+        </li>
+      </ul>
 
-<br>
-<script type="text/javascript">blogparts={"base":"https://www.dlsite.com/","type":"ranking","site":"maniax","query":{"period":"week","options":["-GRO","-MEN"]},"title":"ランキング","display":"horizontal","detail":"1","column":"v","image":"large","count":"3","wrapper":"1","autorotate":true,"aid":"usagipyonpyon"}</script><script type="text/javascript" src="https://www.dlsite.com/js/blogparts.js" charset="UTF-8"></script>
-</p>
-    </div>
+      <!-- 中央下部の DLsite ランキング -->
+      <div class="ad-container">
+        <p>🔸 ADs 🔸</p>
+        <p>※以下のサイト経由で購入すると、紹介料を頂けます！</p>
+        <script type="text/javascript">
+          blogparts={
+            "base":"https://www.dlsite.com/",
+            "type":"ranking",
+            "site":"maniax",
+            "query":{"period":"week","options":["-GRO","-MEN"]},
+            "title":"ランキング",
+            "display":"horizontal",
+            "detail":"1",
+            "column":"v",
+            "image":"large",
+            "count":"3",
+            "wrapper":"1",
+            "autorotate":true,
+            "aid":"usagipyonpyon"
+          }
+        </script>
+        <script type="text/javascript" src="https://www.dlsite.com/js/blogparts.js" charset="UTF-8"></script>
+      </div>
+    </main>
+
+    <!-- 右サイドバー AD -->
+    <aside class="sidebar">
+      <div class="ad-container">
+        <!-- 右用 AdSense コード -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2920773689902115"
+             data-ad-slot="右側のスロットID"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+    </aside>
   </div>
 </body>
 </html>
