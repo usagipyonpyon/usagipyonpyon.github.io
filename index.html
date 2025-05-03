@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+/* 字體 */
 <link
   href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
   rel="stylesheet"
@@ -295,25 +296,24 @@ Your help fuels more content!<br>
     <div class="visitor-card">
       <span class="heart">❤️</span>
       <div class="visitor-info">
-        <div class="label">Page views</div>
-        <div class="count" id="view-count">Loading…</div>
+        <div class="label">總瀏覽次數</div>
+        <div class="count" id="view-count">讀取中…</div>
       </div>
     </div>
   </footer>
 
- <script>
+
+  <script>
     async function fetchAndDisplayViews() {
-      const key = 'pyon-profile/total-views'; // 替换成你自己的 namespace/key
+      const key = 'pyon-profile/total-views'; 
       try {
-        // 先用 hit 增加并获取最新值
         const res = await fetch(`https://api.countapi.xyz/hit/${key}`);
         const data = await res.json();
-        // 将数字补齐到 7 位长度
+        console.log('CountAPI 返回：', data.value);
         const padded = String(data.value).padStart(7, '0');
         document.getElementById('view-count').textContent = padded;
       } catch (err) {
         console.error('获取浏览次数失败', err);
-        // 如果失败，显示 0000000
         document.getElementById('view-count').textContent = '0000000';
       }
     }
