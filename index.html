@@ -120,35 +120,67 @@
       margin-top: 24px;
     }
 /* -----------------------------
-   更美觀的頁面底部 Footer
+   主页风格訪問計數器
    ----------------------------- */
-.page-footer {
+.visitor-footer {
   width: 100%;
-  background: linear-gradient(90deg, rgba(255,228,233,0.8), rgba(255,255,255,0));
-  padding: 16px 0;
-  margin-top: 40px;
-  font-size: 0.9rem;
-  color: #444;
+  padding: 24px 0;
+  background-color: transparent;
   text-align: center;
-  border-top: 2px solid #ffcad4;
-  box-shadow: inset 0 1px 4px rgba(0,0,0,0.05);
+  margin-top: 40px;
 }
 
-.page-footer .footer-content {
+.visitor-card {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
+  padding: 16px 24px;
+  background: rgba(255,255,255,0.85);
+  border: 2px solid #ffcad4;
+  border-radius: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  backdrop-filter: blur(8px);
 }
 
-.page-footer .footer-icon {
-  font-size: 1.2rem;
-  animation: pulse 2s infinite;
+/* 心形 */
+.visitor-card .heart {
+  font-size: 2rem;
+  animation: beat 1.5s infinite;
 }
 
-/* 脈衝動畫讓小圖示更活潑 */
-@keyframes pulse {
+/* 文字区域 */
+.visitor-info .label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+.visitor-info .count {
+  font-family: 'Courier New', monospace;
+  font-size: 2rem;
+  color: #ff4d6d;
+  letter-spacing: 0.05em;
+}
+
+/* 心跳动画 */
+@keyframes beat {
   0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.2); }
+  25%, 75% { transform: scale(1.2); }
+  50%      { transform: scale(1); }
+}
+
+/* 深色模式兼容 */
+@media (prefers-color-scheme: dark) {
+  .visitor-card {
+    background: rgba(42,26,36,0.85);
+    border-color: #59364a;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .visitor-info .label {
+    color: #aaa;
+  }
+  .visitor-info .count {
+    color: #ff9bb0;
+  }
 }
 
 /* 深色模式下自動切換 */
@@ -161,30 +193,7 @@
   }
 }
 
-    /* 深色模式支援 */
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #2a1a24;
-        color: #ddd;
-      }
-      .links a {
-        background: #2a2a2a;
-        color: #eee;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-      }
-      .links a:hover {
-        background: #3a2a34;
-      }
-      .profile p,
-      .note {
-        color: #aaa;
-      }
-      .ad-container {
-        background: #2a2a2a;
-        border-color: #555;
-        color: #ccc;
-      }
-    }
+  
   </style>
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2920773689902115" crossorigin="anonymous"></script>
@@ -269,26 +278,28 @@ Your help fuels more content!<br>
 <br>
 </p>
     </div>
-  <!-- 內容區結束後的頁面底部 Footer -->
-  </div> <!-- /.container -->
+   </div> <!-- /.container -->
 
-  <footer class="page-footer">
-    <div class="footer-content">
-      <span class="footer-icon">❤️</span>
-      瀏覽次數：<span id="view-count">讀取中…</span>
+  <footer class="visitor-footer">
+    <div class="visitor-card">
+      <span class="heart">❤️</span>
+      <div class="visitor-info">
+        <div class="label">總瀏覽次數</div>
+        <div class="count" id="view-count">讀取中…</div>
+      </div>
     </div>
   </footer>
 
-  <!-- CountAPI 用來獲取並顯示總瀏覽次數 -->
   <script>
     fetch('https://api.countapi.xyz/hit/pyon-profile/total-views')
       .then(res => res.json())
       .then(data => {
-        document.getElementById('view-count').textContent = data.value;
+        document.getElementById('view-count').textContent = data.value.toLocaleString();
       })
       .catch(() => {
         document.getElementById('view-count').textContent = '—';
       });
+ 
   </script>
 </body>
 </html>
