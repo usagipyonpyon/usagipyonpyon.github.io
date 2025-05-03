@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-/* 字體 */
 <link
   href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
   rel="stylesheet"
@@ -124,20 +123,23 @@
       font-size: 0.85rem;
       margin-top: 24px;
     }
-/* -----------------------------
-   主页风格訪問計數器
-   ----------------------------- */
+/* 更清晰的標籤與數字字體 */
 .visitor-info .label {
-  font-family: 'Indie Flower', cursive;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-weight: 700;
   font-size: 1rem;
-  color: #666;
+  color: #444;
   margin-bottom: 4px;
 }
 
 .visitor-info .count {
-  font-family: 'Indie Flower', cursive;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700;
   font-size: 2rem;
   color: #ff4d6d;
+  width: 7ch;            /* 等同 7 個字元寬度 */
+  text-align: center;    /* 置中對齊 */
+  display: inline-block; /* 使 width 生效 */
   letter-spacing: 0.05em;
 }
 
