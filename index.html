@@ -292,34 +292,34 @@ Your help fuels more content!<br>
 <br>
 </p>
     </div>
-  </div> <!-- /.container -->
+  
 
-  <footer class="visitor-footer">
-    <div class="visitor-card">
-      <span class="heart">❤️</span>
-      <div class="visitor-info">
-        <div class="label">Page views</div>
-        <div class="count" id="view-count">Loading…</div>
-      </div>
+</div> <!-- 訪客計數器 -->
+<footer class="visitor-footer">
+  <div class="visitor-card">
+    <span class="heart">❤️</span>
+    <div class="visitor-info">
+      <div class="label">Page views</div>
+      <div class="count" id="view-count">ローディング</div>
     </div>
-  </footer>
+  </div>
+</footer>
 
 
-  <script>
-    async function fetchAndDisplayViews() {
-      const key = 'pyon-profile/total-views'; 
-      try {
-        const res = await fetch(`https://api.countapi.xyz/hit/${key}`);
-        const data = await res.json();
-        console.log('CountAPI 返回：', data.value);
-        const padded = String(data.value).padStart(7, '0');
-        document.getElementById('view-count').textContent = padded;
-      } catch (err) {
-        console.error('获取浏览次数失败', err);
-        document.getElementById('view-count').textContent = '0000000';
-      }
+<script>
+  async function fetchAndDisplayViews() {
+    const key = 'pyon-profile/total-views';
+    try {
+      const res = await fetch(`https://api.countapi.xyz/hit/${key}`);
+      const data = await res.json();
+      const padded = String(data.value).padStart(7, '0');
+      document.getElementById('view-count').textContent = padded;
+    } catch (err) {
+      console.error('取得瀏覽次數失敗', err);
+      document.getElementById('view-count').textContent = '0000000';
     }
-    fetchAndDisplayViews();
-  </script>
+  }
+  document.addEventListener('DOMContentLoaded', fetchAndDisplayViews);
+</script>
 </body>
 </html>
