@@ -1,27 +1,24 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>pyon Profile</title>
 
-  <!-- Google Fonts：Comic Neue / M PLUS Rounded 1c / ZCOOL KuaiLe -->
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&family=Indie+Flower&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet"/>
 
-  <!-- Firebase SDK (兼容版) -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <style>
-    /* 全局字体：拉丁 → 日 → 中 → 备援 */
+    /* 统一字体：Rob oto Mono（等宽）+ 手写装饰 Indie Flower */
     body {
-      font-family:
-        'Comic Neue',
-        'M PLUS Rounded 1c',
-        'ZCOOL KuaiLe',
-        sans-serif;
+      font-family: 'Roboto Mono', monospace;
       background-color: #ffe4e9;
       background-image:
         radial-gradient(rgba(0,0,0,0.05) 2px, transparent 2px),
@@ -29,8 +26,10 @@
       background-size: 40px 40px;
       background-position: 0 0, 20px 20px;
       color: #333;
-      margin: 0;
-      padding: 20px;
+      margin: 0; padding: 20px;
+    }
+    h1, .lang-label {
+      font-family: 'Indie Flower', cursive;
     }
 
     /* 语言切换器 */
@@ -40,43 +39,44 @@
       padding: 4px 12px; border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       font-size: 0.9rem; display: flex;
-      align-items: center; gap: 4px; z-index: 1000;
+      align-items: center; gap: 4px; z-index:1000;
     }
-    .lang-switcher .lang-label { font-weight: 600; color: #333; }
+    .lang-switcher .lang-label { font-weight:700; }
     .lang-switcher .lang-btn {
-      text-decoration: none; background: #fff; color: #111;
-      padding: 2px 6px; border-radius: 6px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      transition: background 0.2s;
+      font-family: 'Roboto Mono', monospace;
+      text-decoration:none; background:#fff; color:#111;
+      padding:2px 6px; border-radius:6px;
+      box-shadow:0 1px 4px rgba(0,0,0,0.1);
+      transition:background 0.2s;
     }
     .lang-switcher .lang-btn.active,
-    .lang-switcher .lang-btn:hover { background: #eaeaea; }
-    .lang-switcher .lang-sep { color: #666; user-select: none; }
+    .lang-switcher .lang-btn:hover { background:#eaeaea; }
+    .lang-switcher .lang-sep { color:#666; user-select:none; }
 
     /* 布局 */
-    .container { max-width: 400px; margin: 0 auto; }
-    .banner img { width: 100%; border-radius: 8px; margin-bottom: 20px; }
-    .profile { text-align: center; margin-bottom: 24px; }
-    .profile h1 { font-size: 1.5rem; margin-bottom: 8px; }
-    .profile p { font-size: 0.9rem; color: #666; line-height: 1.4; }
-    .links { list-style: none; padding: 0; margin-bottom: 24px; }
-    .links li { margin-bottom: 16px; text-align: center; }
+    .container { max-width:400px; margin:0 auto; }
+    .banner img { width:100%; border-radius:8px; margin-bottom:20px; }
+    .profile { text-align:center; margin-bottom:24px; }
+    .profile h1 { font-size:1.5rem; margin-bottom:8px; }
+    .profile p { font-size:0.9rem; color:#666; line-height:1.4; }
+    .links { list-style:none; padding:0; margin-bottom:24px; }
+    .links li { margin-bottom:16px; text-align:center; }
     .links a {
-      display: inline-block; width: 200px; height: 40px; line-height: 40px;
-      text-decoration: none; background: #fff; color: #111; font-weight: 600;
-      border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      transition: background 0.2s;
+      font-family: 'Roboto Mono', monospace;
+      display:inline-block; width:200px; height:40px; line-height:40px;
+      text-decoration:none; background:#fff; color:#111; font-weight:700;
+      border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);
+      transition:background 0.2s;
     }
-    .links a:hover { background: #eaeaea; }
+    .links a:hover { background:#eaeaea; }
     .note {
-      margin-top: 8px; font-size: 0.85rem; color: #666;
-      line-height: 1.4; width: 200px; margin: 0 auto;
-      text-align: left;
+      margin-top:8px; font-size:0.85rem; color:#666;
+      line-height:1.4; width:200px; margin:0 auto; text-align:left;
     }
     .ad-container {
-      background: #fff; padding: 12px; border: 2px dashed #ccc;
-      border-radius: 8px; text-align: center; color: #555;
-      font-size: 0.85rem; margin-top: 24px;
+      background:#fff; padding:12px; border:2px dashed #ccc;
+      border-radius:8px; text-align:center; color:#555;
+      font-size:0.85rem; margin-top:24px;
     }
 
     /* 访客计数卡片 */
@@ -90,21 +90,18 @@
     }
     .visitor-card .heart { font-size:2rem; animation:beat 1.5s infinite; }
     .visitor-info .label {
-      font-family:'Noto Sans TC',sans-serif;
-      font-weight:700; font-size:0.85rem; color:#666; margin-bottom:4px;
+      font-family:'Roboto Mono',monospace; font-weight:700;
+      font-size:0.85rem; color:#666; margin-bottom:4px;
     }
     .visitor-info .count {
-      font-family:'Roboto Mono',monospace;
-      font-weight:700; font-size:2rem; color:#ff4d6d;
-      width:7ch; text-align:center; display:inline-block;
-      letter-spacing:0.05em;
+      font-family:'Roboto Mono',monospace; font-weight:700;
+      font-size:2rem; color:#ff4d6d; width:7ch;
+      text-align:center; display:inline-block; letter-spacing:0.05em;
     }
-    @keyframes beat {
-      0%,100%{transform:scale(1)}25%,75%{transform:scale(1.2)}50%{transform:scale(1)}
-    }
+    @keyframes beat { 0%,100%{scale:1}25%,75%{scale:1.2}50%{scale:1} }
 
     @media (prefers-color-scheme: dark) {
-      body { background-color:#2a1a24; color:#ddd; }
+      body { background:#2a1a24; color:#ddd; }
       .links a { background:#2a2a2a; color:#eee; }
       .links a:hover { background:#3a2a34; }
       .profile p,.note { color:#aaa; }
@@ -128,18 +125,16 @@
   </div>
 
   <div class="container">
-    <!-- Banner -->
     <div class="banner">
       <img src="ad6dadf1-3f23-4962-8e1f-ba16fdf585f9.png" alt="絵"/>
     </div>
 
-    <!-- Profile -->
     <section class="profile">
        <p class="note" data-i18n-key="title"</h1>
        <p class="note" data-i18n-key="intro">…</p>
+
     </section>
 
-    <!-- Links -->
     <ul class="links">
       <li>
         <a href="https://discord.gg/7wfBNYqrYU" target="_blank">Discord</a>
@@ -159,18 +154,14 @@
       </li>
     </ul>
 
-    <!-- Ads -->
     <div class="ad-container">
       <p data-i18n-key="ad_title">🔸 ADs 🔸</p>
       <p data-i18n-key="ad_text">※以下のバナー経由でどんな作品でも購入すると、紹介料を頂けます！</p>
-      <script type="text/javascript">
-        blogparts={/* … */};
-      </script>
+      <script>blogparts={/*…*/};</script>
       <script src="https://www.dlsite.com/js/blogparts.js" charset="UTF-8"></script>
     </div>
   </div>
 
-  <!-- Visitor Count -->
   <footer class="visitor-footer">
     <div class="visitor-card">
       <span class="heart">❤️</span>
@@ -184,12 +175,11 @@
   <!-- 多语言脚本 -->
   <script>
     let i18n = {};
-    document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', () => {
       fetch('translations.json')
         .then(r => r.json())
         .then(data => {
           i18n = data;
-          // 默认日文
           applyLanguage('ja');
           document.querySelector('.lang-btn[data-lang="ja"]').classList.add('active');
         })
@@ -198,7 +188,7 @@
       document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.addEventListener('click', e => {
           e.preventDefault();
-          const lang = btn.dataset.lang;
+          const lang = btn.getAttribute('data-lang');
           applyLanguage(lang);
           document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
@@ -208,7 +198,7 @@
 
     function applyLanguage(lang) {
       document.querySelectorAll('[data-i18n-key]').forEach(el => {
-        const key = el.dataset.i18nKey;
+        const key = el.getAttribute('data-i18n-key');
         if (i18n[lang] && i18n[lang][key] !== undefined) {
           el.textContent = i18n[lang][key];
         }
@@ -216,26 +206,7 @@
     }
   </script>
 
-  <!-- Firebase Count Script -->
+  <!-- Firebase 访客计数 -->
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDQDeDeKekDMyqdtul7to3CFJb6paQCn3k",
-      authDomain: "pyon-d5faa.firebaseapp.com",
-      databaseURL: "https://pyon-d5faa-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "pyon-d5faa",
-      storageBucket: "pyon-d5faa.appspot.com",
-      messagingSenderId: "769871960586",
-      appId: "1:769871960586:web:6bb222e05bbd491f79ddf3"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    function updateViewCount() {
-      db.ref('viewCount').transaction(current => (current||0)+1, (err,comm,snap) => {
-        document.getElementById('view-count').textContent =
-          String(snap.val()).padStart(7, '0');
-      });
-    }
-    document.addEventListener('DOMContentLoaded', updateViewCount);
-  </script>
-</body>
-</html>
+    const firebaseConfig =
+
