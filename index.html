@@ -316,14 +316,14 @@ Your help fuels more content!<br>
   </div>
 </footer>
 <footer class="badge-footer">
-  />
 </footer>
 
 <script>
   async function fetchAndDisplayViews() {
     const key = 'pyon-profile/total-views';
     try {
-      const res = await fetch(https://api.countapi.xyz/hit/${key});
+      // 注意：URL 要用反引號或單/雙引號包起來
+      const res = await fetch(`https://api.countapi.xyz/hit/${key}`);
       const data = await res.json();
       const padded = String(data.value).padStart(7, '0');
       document.getElementById('view-count').textContent = padded;
