@@ -278,7 +278,7 @@ Your help fuels more content!<br>
 <br>
 </p>
     </div>
-   </div> <!-- /.container -->
+  </div> <!-- /.container -->
 
   <footer class="visitor-footer">
     <div class="visitor-card">
@@ -290,16 +290,23 @@ Your help fuels more content!<br>
     </div>
   </footer>
 
-  <script>
-    fetch('https://api.countapi.xyz/hit/pyon-profile/total-views')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('view-count').textContent = data.value.toLocaleString();
-      })
-      .catch(() => {
-        document.getElementById('view-count').textContent = '—';
-      });
- 
+ <script>
+    async function fetchAndDisplayViews() {
+      const key = 'pyon-profile/total-views'; // 替换成你自己的 namespace/key
+      try {
+        // 先用 hit 增加并获取最新值
+        const res = await fetch(`https://api.countapi.xyz/hit/${key}`);
+        const data = await res.json();
+        // 将数字补齐到 7 位长度
+        const padded = String(data.value).padStart(7, '0');
+        document.getElementById('view-count').textContent = padded;
+      } catch (err) {
+        console.error('获取浏览次数失败', err);
+        // 如果失败，显示 0000000
+        document.getElementById('view-count').textContent = '0000000';
+      }
+    }
+    fetchAndDisplayViews();
   </script>
 </body>
 </html>
