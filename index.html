@@ -119,6 +119,20 @@
       font-size: 0.85rem;
       margin-top: 24px;
     }
+/* 瀏覽人數：固定在底部中央 */
+.view-counter {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;            /* 距離底部 20px，可自行調整 */
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.8);
+  padding: 6px 12px;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  font-size: 0.85rem;
+  color: #333;
+  z-index: 1000;
+}
 
     /* 深色模式支援 */
     @media (prefers-color-scheme: dark) {
@@ -228,6 +242,11 @@ Your help fuels more content!<br>
 <br>
 </p>
     </div>
+
+      <!-- ↓ 新增：瀏覽人數計數器 ↓ -->
+      <div class="view-counter">
+        瀏覽人數：<span id="view-count">0</span>
+      </div>
   </div>
 </body>
 </html>
