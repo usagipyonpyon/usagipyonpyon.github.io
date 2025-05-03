@@ -269,11 +269,26 @@ Your help fuels more content!<br>
 <br>
 </p>
     </div>
+  <!-- 內容區結束後的頁面底部 Footer -->
+  </div> <!-- /.container -->
 
-      <!-- ↓ 新增：瀏覽人數計數器 ↓ -->
-      <div class="view-counter">
-        瀏覽人數：<span id="view-count">0</span>
-      </div>
-  </div>
+  <footer class="page-footer">
+    <div class="footer-content">
+      <span class="footer-icon">👁️</span>
+      瀏覽次數：<span id="view-count">讀取中…</span>
+    </div>
+  </footer>
+
+  <!-- CountAPI 用來獲取並顯示總瀏覽次數 -->
+  <script>
+    fetch('https://api.countapi.xyz/hit/pyon-profile/total-views')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('view-count').textContent = data.value;
+      })
+      .catch(() => {
+        document.getElementById('view-count').textContent = '—';
+      });
+  </script>
 </body>
 </html>
