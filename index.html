@@ -1,10 +1,74 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-<div class="lang-switcher">
-  <button data-lang="en">EN</button>
-  <button data-lang="ja">JP</button>
-  <button data-lang="zh">中</button>
+<body>
+  <!-- 語言切換器：放到這裡，切出 container 之外 -->
+  <div class="lang-switcher">
+    <span class="lang-label">Language:</span>
+    <a href="#" data-lang="en" class="lang-btn">EN</a>
+    <span class="lang-sep">/</span>
+    <a href="#" data-lang="ja" class="lang-btn">JP</a>
+    <span class="lang-sep">/</span>
+    <a href="#" data-lang="zh" class="lang-btn">CN</a>
+  </div>
+/* --------- 语言切换样式 --------- */
+.lang-switcher {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 1000;
+}
+
+.lang-switcher .lang-label {
+  font-weight: 600;
+  color: #333;
+  margin-right: 4px;
+}
+
+.lang-switcher .lang-btn {
+  text-decoration: none;
+  background: #fff;
+  color: #111;
+  padding: 2px 6px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  transition: background 0.2s;
+}
+
+.lang-switcher .lang-btn:hover,
+.lang-switcher .lang-btn.active {
+  background: #eaeaea;
+}
+
+.lang-switcher .lang-sep {
+  color: #666;
+  user-select: none;
+}
+
+.lang-switcher {
+  position: fixed;    /* 釘在視窗 */
+  top: 16px;          /* 距離頂部 16px */
+  right: 16px;        /* 距離右側 16px */
+  background: rgba(255,255,255,0.9);
+  padding: 4px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 1000;
+}
+
+
+  <div class="container">
+    <!-- 你的其他內容… -->
+  </div>
 </div>
 
 <!-- Firebase SDK (兼容版) -->
