@@ -1,4 +1,175 @@
-  <!-- 1. Google Fonts 引入 -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- …你的<head>内容… -->
+  <style>
+    /* 语言切换样式（只放一次） */
+    .lang-switcher {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: rgba(255,255,255,0.9);
+      padding: 4px 12px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      z-index: 1000;
+    }
+    .lang-switcher .lang-label {
+      font-weight: 600;
+      color: #333;
+    }
+    .lang-switcher .lang-btn {
+      text-decoration: none;
+      background: #fff;
+      color: #111;
+      padding: 2px 6px;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      transition: background 0.2s;
+    }
+    .lang-switcher .lang-btn.active,
+    .lang-switcher .lang-btn:hover {
+      background: #eaeaea;
+    }
+    .lang-switcher .lang-sep {
+      color: #666;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+<!-- 放在 <body> 开头，container 之外 -->
+<div class="lang-switcher">
+  <span class="lang-label">Language:</span>
+  <a href="#" data-lang="en" class="lang-btn">EN</a>
+  <span class="lang-sep">/</span>
+  <a href="#" data-lang="ja" class="lang-btn">JP</a>
+  <span class="lang-sep">/</span>
+  <a href="#" data-lang="zh" class="lang-btn">CN</a>
+</div>
+
+<!-- 你的 container ... -->
+<div class="container">
+  <!-- 示例可替换元素 -->
+  <h1 data-i18n-key="title">ぴょん</h1>
+  <p data-i18n-key="intro">…預設日文內容…</p>
+  <!-- 其他帶 data-i18n-key 的元素 -->
+</div>
+
+<style>
+/* ← 你現在很喜歡的語言切換按鈕樣式 */
+.lang-switcher {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: rgba(255,255,255,0.9);
+  padding: 4px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 1000;
+}
+.lang-switcher .lang-label {
+  font-weight: 600;
+  color: #333;
+}
+.lang-switcher .lang-btn {
+  text-decoration: none;
+  background: #fff;
+  color: #111;
+  padding: 2px 6px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  transition: background 0.2s;
+}
+.lang-switcher .lang-btn.active,
+.lang-switcher .lang-btn:hover {
+  background: #eaeaea;
+}
+.lang-switcher .lang-sep {
+  color: #666;
+  user-select: none;
+}
+</style>
+
+<script>
+  let i18n = {};
+
+  // 1) 載入 translations.json
+  fetch('translations.json')
+    .then(res => res.json())
+    .then(data => {
+      i18n = data;
+      // 先設定預設語系
+      applyLanguage('ja');
+      // 並標記預設按鈕
+      document.querySelector('.lang-btn[data-lang="ja"]').classList.add('active');
+    })
+    .catch(err => console.error('載入 translations.json 失敗', err));
+
+  // 2) 切換語系並替換文字
+  function applyLanguage(lang) {
+    document.querySelectorAll('[data-i18n-key]').forEach(el => {
+      const key = el.getAttribute('data-i18n-key');
+      if (i18n[lang] && i18n[lang][key] !== undefined) {
+        el.textContent = i18n[lang][key];
+      }
+    });
+  }
+
+  // 3) 綁定按鈕事件
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const lang = btn.getAttribute('data-lang');
+      applyLanguage(lang);
+      // 標記當前按鈕
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+
+
+  <!-- ← 确保这一段是真正的 HTML，不是在注释或 <pre> 里 -->
+  <div class="lang-switcher">
+    <span class="lang-label">Language:</span>
+    <a href="#" data-lang="en" class="lang-btn">EN</a>
+    <span class="lang-sep">/</span>
+    <a href="#" data-lang="ja" class="lang-btn">JP</a>
+    <span class="lang-sep">/</span>
+    <a href="#" data-lang="zh" class="lang-btn">CN</a>
+  </div>
+  
+  <div class="container">
+    <!-- 你的其他内容… -->
+  </div>
+
+  <script>
+    // 事件绑定示例（简化版）
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        // 切换 active 类
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // 在这里再调用 setLanguage(btn.dataset.lang);
+      });
+    });
+    // 默认高亮
+    document.querySelector('.lang-btn[data-lang="ja"]').classList.add('active');
+  </script>
+</body>
+</html>
+ 
+ <!-- 1. Google Fonts 引入 -->
   <link
     href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap"
     rel="stylesheet"
