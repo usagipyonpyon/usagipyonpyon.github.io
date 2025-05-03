@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+<!-- Firebase SDK (兼容版) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
 <link
   href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
   rel="stylesheet"
@@ -360,17 +364,48 @@ Your help fuels more content!<br>
     </div>
   
 
-<!-- Firebase 支持的瀏覽次數區塊 -->
 <footer class="visitor-footer">
   <div class="visitor-card">
     <span class="heart">❤️</span>
     <div class="visitor-info">
-      <div class="label">Page views</div>
-      <div class="count" id="view-count">Loading</div>
+      <div class="label">總瀏覽次數</div>
+      <div class="count" id="view-count">讀取中…</div>
     </div>
   </div>
-
 </footer>
+<script>
+  // 你的 Firebase Web App 設定（請填入你自己的值）
+  const firebaseConfig = {
+  apiKey: "AIzaSyDQDeDeKekDMyqdtul7to3CFJb6paQCn3k",
+  authDomain: "pyon-d5faa.firebaseapp.com",
+  databaseURL: "https://pyon-d5faa-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "pyon-d5faa",
+  storageBucket: "pyon-d5faa.firebasestorage.app",
+  messagingSenderId: "769871960586",
+  appId: "1:769871960586:web:6bb222e05bbd491f79ddf3",
+  measurementId: "G-RD5J4S1SBJ"
+};
+
+  // 初始化 Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  // 交易式遞增並顯示
+  function updateViewCount() {
+    const ref = db.ref('viewCount');
+    ref.transaction(current => (current || 0) + 1, (err, committed, snap) => {
+      if (committed) {
+        const v = String(snap.val()).padStart(7, '0');
+        document.getElementById('view-count').textContent = v;
+      } else {
+        document.getElementById('view-count').textContent = '0000000';
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', updateViewCount);
+</script>
+
 
 </script>
 </body>
