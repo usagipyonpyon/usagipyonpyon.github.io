@@ -45,7 +45,7 @@
 
   <!-- ← 确保这一段是真正的 HTML，不是在注释或 <pre> 里 -->
   <div class="lang-switcher">
-    <span class="lang-label">Language:(工事中)</span>
+    <span class="lang-label">Language:</span>
     <a href="#" data-lang="en" class="lang-btn">EN</a>
     <span class="lang-sep">/</span>
     <a href="#" data-lang="ja" class="lang-btn">JP</a>
@@ -197,37 +197,55 @@
     <a href="#" data-lang="zh" class="lang-btn">CN</a>
   </div>
 
-  <!-- 多语言脚本：加载 translations.json 并替换 -->
+   <!-- 在这里贴入，务必放在 </body> 之前 -->
   <script>
+    // i18n 数据容器
     let i18n = {};
-    fetch('translations.json')
-      .then(r => r.json())
+
+    // 1. 先去加载 translations.json（注意绝对路径）
+    fetch('/translations.json')
+      .then(resp => {
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        return resp.json();
+      })
       .then(data => {
         i18n = data;
+        // 默认设定日文，填充页面
         applyLanguage('ja');
-        document.querySelector('.lang-btn[data-lang="ja"]').classList.add('active');
+        // 高亮 JP 按钮
+        document.querySelector('.lang-btn[data-lang="ja"]')
+                .classList.add('active');
       })
-      .catch(console.error);
+      .catch(err => console.error('i18n 加载失败:', err));
 
-    function applyLanguage(lang) {
-      document.querySelectorAll('[data-i18n-key]').forEach(el => {
-        const k = el.getAttribute('data-i18n-key');
-        if (i18n[lang] && i18n[lang][k] !== undefined) {
-          el.textContent = i18n[lang][k];
-        }
-      });
-    }
-
+    // 2. 点击按钮时切换语系
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.addEventListener('click', e => {
         e.preventDefault();
         const lang = btn.getAttribute('data-lang');
         applyLanguage(lang);
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        // 切换 active 样式
+        document.querySelectorAll('.lang-btn')
+                .forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
       });
     });
+
+    // 3. 根据指定 lang 把 data-i18n-key 填上对应文案
+    function applyLanguage(lang) {
+      document.querySelectorAll('[data-i18n-key]').forEach(el => {
+        const key = el.getAttribute('data-i18n-key');
+        const txt = i18n[lang] && i18n[lang][key];
+        if (txt !== undefined) {
+          el.textContent = txt;
+        } else {
+          console.warn(`Missing [${key}] for lang ${lang}`);
+        }
+      });
+    }
   </script>
+</body>
+</html>
 </body>
 </html>
 
