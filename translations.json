@@ -13,8 +13,6 @@
     "pixiv_note": "Support site previews here！",
     "ad_title": "🔸 ADs 🔸",
     "ad_text": "※Purchasing any work through the banners below earns me a referral fee!"
-    "intro_heading": "Introduction",
-    "article_heading": "This Month’s Releases",
   },
   "ja": {
     "btn_en": "EN",
@@ -28,8 +26,6 @@
     "pixiv_note": "支援サイトのプレビュー！",
     "ad_title": "🔸 ADs 🔸",
     "ad_text": "※以下のバナー経由でどんな作品でも購入すると、紹介料を頂けます！"
-    "intro_heading": "紹介",
-    "article_heading": "今月の作品発表",
   },
   "zh": {
     "btn_en": "EN",
@@ -43,7 +39,5 @@
     "pixiv_note": "支援網站的預覽等等的！",
     "ad_title": "🔸 ADs 🔸",
     "ad_text": "※點擊看板後購買任意作品可以讓我獲得介紹費！"
-    "intro_heading": "介绍",
-    "article_heading": "本月作品发表",
   }
 }
