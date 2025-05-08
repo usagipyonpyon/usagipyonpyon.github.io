@@ -206,7 +206,52 @@
       <h2 data-article-key="article_heading">今月の作品発表</h2>
       <p data-article-key="article_body"></p>
     </div>
-    </section>
+      <!-- Blog Posts -->
+  <section id="blog-posts" class="blog-posts">
+    <!-- JS 会自动把 <article> 塞进来 -->
+/* 博客文章区 */
+.blog-posts {
+  width: 100%;
+  max-width: 800px;
+  margin: 40px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+/* 单篇文章 */
+.blog-posts article {
+  background: rgba(255,255,255,0.9);
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.blog-posts article h3 {
+  margin-bottom: 8px;
+  font-size: 1.3rem;
+  text-align: center;
+}
+.blog-posts article .post-date {
+  font-size: 0.85rem;ssssㄋ
+  color: #999;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.blog-posts article img {
+  display: block;
+  max-width: 100%;
+  border-radius: 6px;
+  margin: 0 auto 16px;
+}
+.blog-posts article p {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+@media (max-width: 600px) {
+  .blog-posts { padding: 0 16px; }
+}
+
+
+  </section>
     
     <!-- Links -->
     <ul class="links">
@@ -318,24 +363,50 @@
     document.addEventListener('DOMContentLoaded', updateViewCount);
   </script>
 <script>
-  // 页面加载后，再去读 articles.json，填充三栏区域
   document.addEventListener('DOMContentLoaded', () => {
-    fetch('./articles.json')
-      .then(r => {
-        if (!r.ok) throw new Error('articles.json ' + r.status);
-        return r.json();
+    // 1. 先等多语言(i18n)脚本跑完后，拿到当前 lang
+    const currentLang = document.querySelector('.lang-btn.active')?.dataset.lang || 'ja';
+
+    // 2. 拉 posts.json
+    fetch('./posts.json')
+      .then(res => {
+        if (!res.ok) throw new Error('posts.json ' + res.status);
+        return res.json();
       })
-      .then(data => {
-        // 假设语言与 i18n 共用同一个 lang 变量，如果你已有 i18n.currentLang，就用它：
-        const lang = document.querySelector('.lang-btn.active')?.dataset.lang || 'ja';
-        // Intro
-        document.querySelectorAll('[data-article-key]').forEach(el => {
-          const key = el.getAttribute('data-article-key');
-          const txt = data[lang] && data[lang][key];
-          if (txt !== undefined) el.textContent = txt;
+      .then(posts => {
+        const container = document.getElementById('blog-posts');
+        posts.forEach(post => {
+          // 创建 article DOM
+          const art = document.createElement('article');
+
+          // 标题
+          const h3 = document.createElement('h3');
+          h3.textContent = post.title[currentLang] || '';
+          art.appendChild(h3);
+
+          // 日期
+          const d = document.createElement('div');
+          d.className = 'post-date';
+          d.textContent = post.date;
+          art.appendChild(d);
+
+          // 配图（若有）
+          if (post.image) {
+            const img = document.createElement('img');
+            img.src = post.image;
+            img.alt = post.title[currentLang] || '';
+            art.appendChild(img);
+          }
+
+          // 正文
+          const p = document.createElement('p');
+          p.textContent = post.content[currentLang] || '';
+          art.appendChild(p);
+
+          container.appendChild(art);
         });
       })
-      .catch(console.error);
+      .catch(err => console.error('加载文章失败：', err));
   });
 </script>
 
