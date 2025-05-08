@@ -1,145 +1,147 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>pyon Profile</title>
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=M+PLUS+Rounded+1c:wght@400;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet"/>
 
+  <!-- Firebase & Storage SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+
   <style>
-    /* Reset */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
+    /* Reset & Base */
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html, body { height:100%; }
     body {
-      font-family: 'Comic Neue', 'M PLUS Rounded 1c', 'ZCOOL KuaiLe', sans-serif;
-      background-color: #ffe4e9;
+      font-family:'Comic Neue','M PLUS Rounded 1c','ZCOOL KuaiLe',sans-serif;
+      background:#ffe4e9 url('') 0 0/40px 40px;
       background-image:
-        radial-gradient(rgba(0,0,0,0.05) 2px, transparent 2px),
-        radial-gradient(rgba(0,0,0,0.05) 2px, transparent 2px);
-      background-size: 40px 40px;
-      background-position: 0 0, 20px 20px;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
+        radial-gradient(rgba(0,0,0,0.05) 2px,transparent 2px),
+        radial-gradient(rgba(0,0,0,0.05) 2px,transparent 2px);
+      background-position:0 0,20px 20px;
+      color:#333;
+      display:flex; flex-direction:column; align-items:center;
+      padding:20px;
     }
 
-    /* Language Switcher */
+    /* Language switcher */
     .lang-switcher {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      background: rgba(255,255,255,0.9);
-      padding: 4px 12px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.9rem;
-      z-index: 1000;
+      position:fixed; top:16px; right:16px;
+      background:rgba(255,255,255,0.9);
+      padding:4px 12px; border-radius:8px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.1);
+      display:flex; align-items:center; gap:4px;
+      font-size:0.9rem; z-index:1000;
     }
-    .lang-switcher .lang-label { font-weight: 600; color: #333; }
     .lang-switcher .lang-btn {
-      text-decoration: none;
-      background: #fff;
-      color: #111;
-      padding: 2px 6px;
-      border-radius: 6px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      transition: background 0.2s;
+      text-decoration:none;
+      background:#fff; color:#111;
+      padding:2px 6px; border-radius:6px;
+      box-shadow:0 1px 4px rgba(0,0,0,0.1);
+      transition:background 0.2s;
     }
     .lang-switcher .lang-btn.active,
-    .lang-switcher .lang-btn:hover { background: #eaeaea; }
-    .lang-switcher .lang-sep { color: #666; user-select: none; }
+    .lang-switcher .lang-btn:hover {
+      background:#eaeaea;
+    }
+
+    /* 保留 JSON \n 换行 */
+    [data-i18n-key],[data-article-key] {
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
 
     /* Layout */
-    .banner { width: 100%; max-width: 800px; margin-bottom: 20px; }
-    .banner img { width: 100%; border-radius: 8px; }
-    .container { width: 100%; max-width: 800px; }
-    .profile { text-align: center; margin-bottom: 24px; }
-    .profile img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; }
-    .profile h1 { font-size: 1.5rem; margin-bottom: 4px; text-align: center; }
-    .profile p { font-size: 0.9rem; color: #666; line-height: 1.3;max-width: 800px;  text-align: center;}
-    .links { list-style: none; margin-bottom: 24px; }
-    .links li { margin-bottom: 16px; text-align: center; }
+    .banner { width:100%; max-width:800px; margin-bottom:20px; }
+    .banner img { width:100%; border-radius:8px; }
+
+    .container { width:100%; max-width:800px; }
+
+    /* 三栏简介＋按钮＋文章预告 */
+    .grid-layout {
+      display:grid;
+      grid-template-columns:1fr 1fr 2fr;
+      gap:16px; margin-bottom:24px;
+    }
+    .grid-layout .col {
+      background:rgba(255,255,255,0.8);
+      padding:12px; border-radius:8px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.1);
+    }
+    .grid-layout .col.intro { text-align:center; }
+    .grid-layout .col.buttons { display:flex; flex-direction:column; align-items:center; }
+    .grid-layout .col.article h2 {
+      margin-bottom:12px; font-size:1.2rem; text-align:center;
+    }
+    @media(max-width:768px) {
+      .grid-layout { grid-template-columns:1fr; }
+    }
+
+    /* Links */
+    .links { list-style:none; margin:16px 0; padding:0; }
+    .links li { margin-bottom:16px; text-align:center; }
     .links a {
-      display: inline-block;
-      width: 200px;
-      height: 40px;
-      line-height: 40px;
-      text-decoration: none;
-      background: #fff;
-      color: #111;
-      font-weight: 600;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      transition: background 0.2s;
+      display:inline-block; width:200px; height:40px;
+      line-height:40px; text-decoration:none;
+      background:#fff; color:#111; font-weight:600;
+      border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);
+      transition:background 0.2s;
     }
-    .links a:hover { background: #eaeaea; }
-    .note {
-      margin-top: 8px;
-      font-size: 0.85rem;
-      color: #666;
-      line-height: 1.4;
-      width: 200px;
-      margin: 0 auto;
-      text-align: left;
+    .links a:hover { background:#eaeaea; }
+
+    /* Blog posts */
+    .blog-posts {
+      display:flex; flex-direction:column; gap:32px;
+      margin:40px 0; width:100%; max-width:800px;
     }
-    .ad-container {
-      background: #fff;
-      padding: 12px;
-      border: 2px dashed #ccc;
-      border-radius: 8px;
-      text-align: center;
-      color: #555;
-      font-size: 0.85rem;
-      margin-top: 24px;
+    .blog-posts article {
+      background:rgba(255,255,255,0.9);
+      padding:24px; border-radius:8px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
     }
-    .visitor-footer { width: 100%; padding: 24px 0; text-align: center; margin-top: 40px; }
+    .blog-posts h3 {
+      text-align:center; font-size:1.3rem; margin-bottom:8px;
+    }
+    .blog-posts .post-date {
+      text-align:center; color:#999; font-size:0.85rem;
+      margin-bottom:16px;
+    }
+    .blog-posts img {
+      display:block; max-width:100%; margin:0 auto 16px;
+      border-radius:6px;
+    }
+    .blog-posts p { line-height:1.6; }
+
+    /* Visitor count */
+    .visitor-footer {
+      width:100%; padding:24px 0; text-align:center;
+      margin-top:40px;
+    }
     .visitor-card {
-      display: inline-flex;
-      align-items: center;
-      gap: 16px;
-      padding: 16px 24px;
-      background: rgba(255,255,255,0.85);
-      border: 2px solid #ffcad4;
-      border-radius: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      backdrop-filter: blur(8px);
+      display:inline-flex; align-items:center; gap:16px;
+      padding:16px 24px;
+      background:rgba(255,255,255,0.85);
+      border:2px solid #ffcad4; border-radius:24px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.08);
+      backdrop-filter:blur(8px);
     }
-    .visitor-card .heart { font-size: 2rem; animation: beat 1.5s infinite; }
-    .visitor-info .label { font-weight: 700; font-size: 0.85rem; color: #666; margin-bottom: 4px; }
-    .visitor-info .count { font-weight: 700; font-size: 2rem; color: #ff4d6d; width: 7ch; text-align: center; letter-spacing: 0.05em; }
-    @keyframes beat {0%,100%{transform:scale(1);}25%,75%{transform:scale(1.2);}50%{transform:scale(1);}}
-    @media (prefers-color-scheme: dark) {
-      body { background-color: #2a1a24; color: #ddd; }
-      .links a { background: #2a2a2a; color: #eee; }
-      .links a:hover { background: #3a2a34; }
-      .profile p, .note { color: #aaa; }
-      .ad-container { background: #2a2a2a; border-color: #555; color: #ccc; }
-      .visitor-card { background: rgba(42,26,36,0.85); border-color: #59364a; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-      .visitor-info .label { color: #aaa; }
-      .visitor-info .count { color: #ff9bb0; }
+    .visitor-info .count {
+      font-weight:700; font-size:2rem; color:#ff4d6d;
+      width:7ch; text-align:center; letter-spacing:0.05em;
     }
- /* 2. 加上这段 —— 保留换行 */
-    [data-i18n-key] {
-      white-space: pre-wrap;
-     }
   </style>
 </head>
-<body>
 
-  <!-- Language Switcher -->
+<body>
+  <!-- 语言切换 -->
   <div class="lang-switcher">
-    <span class="lang-label" data-i18n-key="lang_label">Language:</span>
-    <a href="#" class="lang-btn" data-lang="en" data-i18n-key="btn_en">EN</a>
-    <span class="lang-sep">/</span>
-    <a href="#" class="lang-btn" data-lang="ja" data-i18n-key="btn_ja">JP</a>
-    <span class="lang-sep">/</span>
+    <a href="#" class="lang-btn" data-lang="en" data-i18n-key="btn_en">EN</a><span>/</span>
+    <a href="#" class="lang-btn active" data-lang="ja" data-i18n-key="btn_ja">JP</a><span>/</span>
     <a href="#" class="lang-btn" data-lang="zh" data-i18n-key="btn_zh">CN</a>
   </div>
 
@@ -149,118 +151,108 @@
   </header>
 
   <div class="container">
-    <!-- Profile -->
-    <section class="profile">
-      <img src="73cb3e4c-6fed-4379-9681-9b2d3aa78b96.png" alt="icon">
-      <h1><p class="note" data-i18n-key="title"></p></h1>
-      <p class="note" data-i18n-key="intro"></p>
-</p>
+    <!-- 三栏布局 -->
+    <section class="grid-layout">
+      <div class="col intro">
+        <h2 data-article-key="intro_heading"></h2>
+      </div>
+      <div class="col buttons">
+        <ul class="links">
+          <li><a href="https://discord.gg/7wfBNYqrYU" target="_blank" data-i18n-key="discord_btn">Discord</a></li>
+          <li><a href="https://patreon.com/USAGIPYONPYON" target="_blank" data-i18n-key="patreon_btn">Patreon</a></li>
+        </ul>
+      </div>
+      <div class="col article">
+        <h2 data-article-key="article_heading"></h2>
+        <p data-article-key="article_body"></p>
+      </div>
     </section>
-    
-    <!-- Links -->
-    <ul class="links">
-      <li>
-        <a href="https://discord.gg/7wfBNYqrYU" target="_blank">Discord</a>
-        <p class="note" data-i18n-key="discord_note"></p>
-        </p>
-      </li>
-      <li>
-        <a href="https://patreon.com/USAGIPYONPYON" target="_blank">Patreon</a>
-        <p class="note" data-i18n-key="patreon_note"></p>
-      </li>
-      <li>
-        <a href="https://afdian.com/a/usagipyonpyon" target="_blank">爱发电</a>
-        <p class="note" data-i18n-key="afdian_note"></p>
-      </li>
-      <li>
-        <a href="https://www.pixiv.net/users/115698769" target="_blank">PIXIV</a>
-        <p class="note" data-i18n-key="pixiv_note"></p>
-      </li>
-    </ul>
 
-    <!-- Ad -->
-    <div class="ad-container">
-      <p class="note" data-i18n-key="ad_title "></p>
-      <p class="note" data-i18n-key="ad_text"></p>
-        <a rel="noopener sponsored" href="https://dlaf.jp/home/dlaf/=/aid/usagipyonpyon/url/https%3A%2F%2Fwww.dlsite.com%2Fhome%2F%3Futm_medium%3Daffiliate%26utm_campaign%3Dbnlink%26utm_content%3Dbn_sp_300_250_dojin_01.gif" target="_blank"><img src="https://www.dlsite.com/img/male/dojin/bn_sp_300_250_dojin_01.gif" width="300" height="250" alt="DLsite"></a>
-      </p>
-    </div>
+    <!-- 博客帖子流 -->
+    <section id="blog-posts" class="blog-posts"></section>
   </div>
 
-  <!-- Visitor Count -->
+  <!-- 访客计数 -->
   <footer class="visitor-footer">
     <div class="visitor-card">
       <span class="heart">❤️</span>
       <div class="visitor-info">
         <div class="label">Page views</div>
-        <div class="count" id="view-count">Loading</div>
+        <div class="count" id="view-count">0000000</div>
       </div>
     </div>
   </footer>
 
-  <!-- i18n Script -->
+  <!-- 多语言 & 博客 & 访客计数脚本 -->
   <script>
+    // 初始化 Firebase
+    const fbConfig = {
+      apiKey: "AIzaSy…", authDomain:"pyon-d5faa.firebaseapp.com",
+      databaseURL:"https://pyon-d5faa-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId:"pyon-d5faa", storageBucket:"pyon-d5faa.appspot.com",
+      messagingSenderId:"769871960586", appId:"1:769871960586:web:…"
+    };
+    firebase.initializeApp(fbConfig);
+    const db = firebase.database();
+    const storage = firebase.storage();
+
     document.addEventListener('DOMContentLoaded', () => {
       let i18n = {};
-      fetch('./translations.json')
-        .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-        .then(data => {
-          i18n = data;
-          applyLanguage('ja');
-          document.querySelector('.lang-btn[data-lang="ja"]').classList.add('active');
-        })
-        .catch(console.error);
-      document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', e => {
-          e.preventDefault();
-          const lang = btn.dataset.lang;
-          applyLanguage(lang);
-          document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-        });
+      // 1. 加载 translations.json
+      fetch('./translations.json').then(r=>r.json()).then(data=>{
+        i18n = data;
+        switchLang('ja');
       });
-      function applyLanguage(lang) {
-        document.querySelectorAll('[data-i18n-key]').forEach(el => {
+      // 2. 切换语言函数
+      function switchLang(lang) {
+        document.querySelectorAll('[data-i18n-key]').forEach(el=>{
           const key = el.getAttribute('data-i18n-key');
-          const txt = i18n[lang] && i18n[lang][key];
-          if (txt !== undefined) el.textContent = txt;
+          if (i18n[lang] && i18n[lang][key]) el.textContent = i18n[lang][key];
         });
+        document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
+        loadBlog(lang);
       }
-    });
-  </script>
+      document.querySelectorAll('.lang-btn').forEach(btn=>{
+        btn.addEventListener('click', e=>{e.preventDefault(); switchLang(btn.dataset.lang);});
+      });
 
-  <!-- Firebase Script -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDQDeDeKekDMyqdtul7to3CFJb6paQCn3k",
-      authDomain: "pyon-d5faa.firebaseapp.com",
-      databaseURL: "https://pyon-d5faa-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "pyon-d5faa",
-      storageBucket: "pyon-d5faa.appspot.com",
-      messagingSenderId: "769871960586",
-      appId: "1:769871960586:web:6bb222e05bbd491f79ddf3"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    const THROTTLE_MS = 60*60*1000;
-    const STORAGE_KEY = 'lastCountTime';
-    function updateViewCount() {
-      const now = Date.now();
-      const last = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
-      if (now - last >= THROTTLE_MS) {
-        db.ref('viewCount').transaction(cur => (cur||0)+1, (err,comm,snap) => {
-          document.getElementById('view-count').textContent = String(snap.val()).padStart(7,'0');
-          localStorage.setItem(STORAGE_KEY, now.toString());
-        });
-      } else {
-        db.ref('viewCount').once('value').then(snap => {
-          document.getElementById('view-count').textContent = String(snap.val()).padStart(7,'0');
+      // 3. 拉 posts.json 并渲染博客
+      function loadBlog(lang) {
+        fetch('./posts.json').then(r=>r.json()).then(posts=>{
+          const feed = document.getElementById('blog-posts');
+          feed.innerHTML = '';
+          posts.forEach(p=>{
+            const art = document.createElement('article');
+            const h3 = document.createElement('h3');
+            h3.textContent = p.title[lang]; art.appendChild(h3);
+            const d = document.createElement('div');
+            d.className='post-date'; d.textContent = p.date; art.appendChild(d);
+            if(p.image){ const img=document.createElement('img'); img.src=p.image; art.appendChild(img);}
+            const cp=document.createElement('p');
+            cp.textContent = p.content[lang]; art.appendChild(cp);
+            feed.appendChild(art);
+          });
         });
       }
-    }
-    document.addEventListener('DOMContentLoaded', updateViewCount);
+
+      // 4. 更新访客计数，1 小时限流
+      const KEY='lastCount', TH=3600*1000;
+      function updateCount(){
+        const now=Date.now(), last=parseInt(localStorage.getItem(KEY)||0);
+        if(now-last>=TH){
+          db.ref('viewCount').transaction(v=> (v||0)+1, (e,c,s)=>{
+            document.getElementById('view-count').textContent = String(s.val()||0).padStart(7,'0');
+            localStorage.setItem(KEY,now);
+          });
+        } else {
+          db.ref('viewCount').once('value').then(snap=>{
+            document.getElementById('view-count').textContent = String(snap.val()||0).padStart(7,'0');
+          });
+        }
+      }
+      updateCount();
+    });
   </script>
 </body>
 </html>
