@@ -623,8 +623,7 @@ Your help fuels more content!<br>
   </div>
 </footer>
 <script>
-  // 你的 Firebase Web App 設定（請填入你自己的值）
-<script>
+  // —— 初始化 Firebase —— 
   const firebaseConfig = {
     apiKey: "AIzaSyDQDeDeKekDMyqdtul7to3CFJb6paQCn3k",
     authDomain: "pyon-d5faa.firebaseapp.com",
@@ -637,31 +636,62 @@ Your help fuels more content!<br>
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // 限流间隔（毫秒）——例如 1 小时
-  const THROTTLE_MS = 60 * 60 * 1000;
+  // —— 客户端限流配置 —— 
+  const THROTTLE_MS = 60 * 60 * 1000;  // 1 小时内只 +1 一次
   const STORAGE_KEY = 'lastCountTime';
 
+  // —— 更新并显示浏览次数 —— 
   function updateViewCount() {
     const now = Date.now();
     const last = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
 
-    if (now - last < THROTTLE_MS) {
-      // 限流内：只读当前值，不再 +1
-      db.ref('viewCount').once('value').then(snap => {
-        const v = String(snap.val() || 0).padStart(7, '0');
-        document.getElementById('view-count').textContent = v;
-      });
+    console.log('updateViewCount:', { now, last, diff: now - last });
+
+    // 超过限流或没记录：真正 +1
+    if (now - last >= THROTTLE_MS) {
+      console.log('— Throttle expired, performing transaction +1');
+      db.ref('viewCount').transaction(cur => (cur || 0) + 1,
+        (err, committed, snap) => {
+          if (err) {
+            console.error('Transaction error:', err);
+            // 出错时也做一次读取
+            return fetchCurrentValue();
+          }
+          if (!committed) {
+            console.log('Transaction not committed, reading current');
+          }
+          // 不论是否提交，都显示最新值
+          const val = snap.val() || 0;
+          showCount(val);
+          localStorage.setItem(STORAGE_KEY, now.toString());
+        }
+      );
     } else {
-      // 超过限流间隔：真正 +1
-      db.ref('viewCount').transaction(cur => (cur || 0) + 1, (err, committed, snap) => {
-        const v = String(snap.val()).padStart(7, '0');
-        document.getElementById('view-count').textContent = v;
-        // 记录这次 +1 的时间
-        localStorage.setItem(STORAGE_KEY, now.toString());
-      });
+      console.log('— Within throttle window, just reading current');
+      fetchCurrentValue();
     }
   }
 
+  // —— 从数据库读取当前值并显示 —— 
+  function fetchCurrentValue() {
+    db.ref('viewCount').once('value')
+      .then(snap => {
+        const v = snap.val() || 0;
+        showCount(v);
+      })
+      .catch(err => {
+        console.error('Read error:', err);
+        showCount(0);
+      });
+  }
+
+  // —— 把数字格式化并写到页面 —— 
+  function showCount(n) {
+    const padded = String(n).padStart(7, '0');
+    document.getElementById('view-count').textContent = padded;
+  }
+
+  // —— 页面加载完后触发 —— 
   document.addEventListener('DOMContentLoaded', updateViewCount);
 </script>
 
