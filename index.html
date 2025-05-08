@@ -179,9 +179,9 @@
     </ul>
 
     <!-- Ad -->
-    <div class="ad-container">
-      <p class="note" data-i18n-key="ad_title "></p>
-      <p class="note" data-i18n-key="ad_text"></p>
+<div class="ad-container">
+  <p class="note" data-i18n-key="ad_title"></p>
+  <p class="note" data-i18n-key="ad_text"></p>
         <a rel="noopener sponsored" href="https://dlaf.jp/home/dlaf/=/aid/usagipyonpyon/url/https%3A%2F%2Fwww.dlsite.com%2Fhome%2F%3Futm_medium%3Daffiliate%26utm_campaign%3Dbnlink%26utm_content%3Dbn_sp_300_250_dojin_01.gif" target="_blank"><img src="https://www.dlsite.com/img/male/dojin/bn_sp_300_250_dojin_01.gif" width="300" height="250" alt="DLsite"></a>
       </p>
     </div>
@@ -198,25 +198,45 @@
     </div>
   </footer>
 
-  <!-- i18n Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      let i18n = {};
-      fetch('./translations.json')
-        .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-        .then(data => {
-          i18n = data;
-          applyLanguage('ja');
-          document.querySelector('.lang-btn[data-lang="ja"]').classList.add('active');
-        })
-        .catch(console.error);
-      <div class="ad-container">
-      <p class="note" data-i18n-key="ad_title "></p>
-      <p class="note" data-i18n-key="ad_text"></p>
-        <a rel="noopener sponsored" href="https://dlaf.jp/home/dlaf/=/aid/usagipyonpyon/url/https%3A%2F%2Fwww.dlsite.com%2Fhome%2F%3Futm_medium%3Daffiliate%26utm_campaign%3Dbnlink%26utm_content%3Dbn_sp_300_250_dojin_01.gif" target="_blank"><img src="https://www.dlsite.com/img/male/dojin/bn_sp_300_250_dojin_01.gif" width="300" height="250" alt="DLsite"></a>
-      </p>
-    </div>
-  </div>
+ <!-- i18n Script -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  let i18n = {};
+
+  // 1. 拉 translations.json
+  fetch('./translations.json')
+    .then(r => {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    })
+    .then(data => {
+      i18n = data;
+      applyLanguage('ja');
+      document.querySelector('.lang-btn[data-lang="ja"]').classList.add('active');
+    })
+    .catch(console.error);
+
+  // 2. 定义 applyLanguage
+  function applyLanguage(lang) {
+    document.querySelectorAll('[data-i18n-key]').forEach(el => {
+      const key = el.getAttribute('data-i18n-key').trim();  // 去掉多余空格
+      const txt = i18n[lang] && i18n[lang][key];
+      if (txt !== undefined) el.textContent = txt;
+    });
+  }
+
+  // 3. 绑定按钮事件
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const lang = btn.dataset.lang;
+      applyLanguage(lang);
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+});
+
 
   <!-- Visitor Count -->
   <footer class="visitor-footer">
