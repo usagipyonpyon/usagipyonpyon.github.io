@@ -164,7 +164,7 @@
     <p class="note" data-i18n-key="discord_note"></p>
   </li>
   <li>
-    <a href="https://t.me/usagi_pyonpyon_chat" target="_blank" data-i18n-key="btn_telegram">Telegram</a>
+    <a href="t.me/usagi_pyonpyon_chat" target="_blank" data-i18n-key="btn_telegram">Telegram</a>
     <p class="note" data-i18n-key="telegram_note"></p>
   </li>
   <li>
@@ -204,48 +204,43 @@
   </footer>
 
   <!-- i18n Script -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  let i18n = {};
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let i18n = {};
+      fetch('./translations.json')
+        .then(res => {
+          if (!res.ok) throw new Error(res.status);
+          return res.json();
+        })
+        .then(data => {
+          i18n = data;
+          setLanguage('ja');
+          document.querySelector('.lang-btn[data-lang="ja"]').classList.add('active');
+        })
+        .catch(console.error);
 
-  // 1) 加载 translations.json
-  fetch('translations.json')
-    .then(r => r.ok ? r.json() : Promise.reject(r.status))
-    .then(data => {
-      i18n = data;
-      applyLang('ja');               // 默认日文
-      document.querySelector('.lang-btn[data-lang="ja"]').classList.add('active');
-    })
-    .catch(err => console.error('i18n load failed:', err));
-
-  // 2) 绑定切换事件
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      const lang = btn.dataset.lang;
-      applyLang(lang);
-      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    });
-  });
-
-  // 3) 真正替换所有 [data-i18n-key]
-  function applyLang(lang) {
-    document.querySelectorAll('[data-i18n-key]').forEach(el => {
-      const key = el.getAttribute('data-i18n-key');
-      const txt = i18n[lang] && i18n[lang][key];
-      if (txt !== undefined) {
-        el.textContent = txt;
+      function setLanguage(lang) {
+        document.querySelectorAll('[data-i18n-key]').forEach(el => {
+          const key = el.getAttribute('data-i18n-key').trim();
+          const txt = i18n[lang] && i18n[lang][key];
+          if (txt !== undefined) el.textContent = txt;
+        });
       }
-    });
-  }
-});
-</script>
 
-<!-- Firebase SDK (兼容版) -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.preventDefault();
+          setLanguage(btn.dataset.lang);
+          document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+    });
+  </script>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDQDeDeKekDMyqdtul7to3CFJb6paQCn3k",
@@ -256,128 +251,27 @@ document.addEventListener('DOMContentLoaded', () => {
       messagingSenderId: "769871960586",
       appId: "1:769871960586:web:6bb222e05bbd491f79ddf3"
     };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const THROTTLE_MS = 60 * 60 * 1000;
+    const STORAGE_KEY = 'lastCountTime';
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  const storage = firebase.storage();
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const isAdmin = new URLSearchParams(location.search).get('admin') === '1';
-    const formSec = document.getElementById('post-form');
-    const feedSec = document.getElementById('posts-feed');
-
-    // 只有 admin 模式下才显示表单
-    if (isAdmin) formSec.style.display = 'block';
-
-    // 绑定“发帖”按钮
-    document.getElementById('post-submit').addEventListener('click', async () => {
-      const now = new Date();
-      const date = now.toISOString().slice(0, 19).replace('T', ' ');  // e.g. "2025-05-09 14:23:30"
-      const file = document.getElementById('post-image').files[0];
-      const text = document.getElementById('post-text').value.trim();
-      if (!text && !file) return alert('请输入文字或上传图片');
-
-      let imageUrl = '';
-      if (file) {
-        const path = `posts/${Date.now()}_${file.name}`;
-        const snap = await storage.ref(path).put(file);
-        imageUrl = await snap.ref.getDownloadURL();
+    function updateViewCount() {
+      const now = Date.now();
+      const last = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+      if (now - last >= THROTTLE_MS) {
+        db.ref('viewCount').transaction(cur => (cur || 0) + 1, (err, comm, snap) => {
+          document.getElementById('view-count').textContent = String(snap.val()).padStart(7, '0');
+          localStorage.setItem(STORAGE_KEY, now.toString());
+        });
+      } else {
+        db.ref('viewCount').once('value').then(snap => {
+          document.getElementById('view-count').textContent = String(snap.val()).padStart(7, '0');
+        });
       }
+    }
 
-      // 写入 Realtime DB
-      await db.ref('posts').push({ date, imageUrl, text });
-      alert('Published!');
-      document.getElementById('post-text').value = '';
-      document.getElementById('post-image').value = '';
-    });
-
-    // 渲染帖子流：按 date 倒序
-    db.ref('posts')
-      .orderByChild('date')
-      .on('value', snap => {
-        const data = snap.val() || {};
-        feedSec.innerHTML = '';
-        Object.entries(data)
-          .sort((a, b) => b[1].date.localeCompare(a[1].date))
-          .forEach(([key, post]) => {
-            const art = document.createElement('article');
-            art.style.cssText = `
-              background:#fff;
-              padding:16px;
-              border-radius:8px;
-              box-shadow:0 2px 6px rgba(0,0,0,0.1);
-              position: relative;
-            `;
-
-            // 如果是 admin 模式，添加删除按钮
-            if (isAdmin) {
-              const del = document.createElement('button');
-              del.textContent = '删除';
-              del.style.cssText = `
-                position:absolute;
-                top:8px; right:8px;
-                background:#ff4d6d; color:#fff;
-                border:none; padding:4px 8px;
-                border-radius:4px; cursor:pointer;
-              `;
-              del.addEventListener('click', () => {
-                if (confirm('确定要删除这篇文章吗？')) {
-                  db.ref(`posts/${key}`)
-                    .remove()
-                    .then(() => art.remove())
-                    .catch(err => alert('删除失败: ' + err.message));
-                }
-              });
-              art.appendChild(del);
-            }
-
-            // 日期
-            const d = document.createElement('div');
-            d.textContent = post.date;
-            d.style.cssText = 'font-size:0.85rem;color:#666;margin-bottom:8px;';
-            art.appendChild(d);
-
-            // 图片（有则展示）
-            if (post.imageUrl) {
-              const img = document.createElement('img');
-              img.src = post.imageUrl;
-              img.style.cssText = 'width:100%;border-radius:4px;margin-bottom:8px;';
-              art.appendChild(img);
-            }
-
-            // 文本
-            const p = document.createElement('p');
-            p.textContent = post.text;
-            p.style.cssText = 'white-space:pre-wrap;line-height:1.5;';
-            art.appendChild(p);
-
-            feedSec.appendChild(art);
-          });
-      });
-  });
-</script>
-
-<!-- Admin 发帖表单（仅 admin 可以看到） -->
-<section id="post-form" style="display:none; max-width:800px; margin:32px auto;
-                               background:#fff; padding:16px; border-radius:8px;
-                               box-shadow:0 2px 6px rgba(0,0,0,0.1);">
-  <h2>📝 New Post</h2>
-  <!-- Date 输入移除，自动使用电脑时间 -->
-  <label>
-    Image:
-    <input type="file" id="post-image" accept="image/*" style="margin-bottom:8px;"/>
-  </label><br/>
-  <textarea id="post-text" rows="4" placeholder="Today's update..."
-            style="width:100%; margin-bottom:8px;"></textarea><br/>
-  <button id="post-submit" style="padding:8px 16px;">Publish</button>
-</section>
-
-<!-- 动态帖子流 -->
-<section id="posts-feed"
-         style="width:100%; max-width:800px; margin:32px auto;
-                display:flex; flex-direction:column; gap:24px;">
-  <!-- JS 会插入 <article>…</article> -->
-</section>
-
+    document.addEventListener('DOMContentLoaded', updateViewCount);
+  </script>
 </body>
 </html>
