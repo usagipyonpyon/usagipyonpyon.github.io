@@ -624,32 +624,42 @@ Your help fuels more content!<br>
 </footer>
 <script>
   // 你的 Firebase Web App 設定（請填入你自己的值）
+<script>
   const firebaseConfig = {
-  apiKey: "AIzaSyDQDeDeKekDMyqdtul7to3CFJb6paQCn3k",
-  authDomain: "pyon-d5faa.firebaseapp.com",
-  databaseURL: "https://pyon-d5faa-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "pyon-d5faa",
-  storageBucket: "pyon-d5faa.firebasestorage.app",
-  messagingSenderId: "769871960586",
-  appId: "1:769871960586:web:6bb222e05bbd491f79ddf3",
-  measurementId: "G-RD5J4S1SBJ"
-};
-
-  // 初始化 Firebase
+    apiKey: "AIzaSyDQDeDeKekDMyqdtul7to3CFJb6paQCn3k",
+    authDomain: "pyon-d5faa.firebaseapp.com",
+    databaseURL: "https://pyon-d5faa-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "pyon-d5faa",
+    storageBucket: "pyon-d5faa.appspot.com",
+    messagingSenderId: "769871960586",
+    appId: "1:769871960586:web:6bb222e05bbd491f79ddf3"
+  };
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // 交易式遞增並顯示
+  // 限流间隔（毫秒）——例如 1 小时
+  const THROTTLE_MS = 60 * 60 * 1000;
+  const STORAGE_KEY = 'lastCountTime';
+
   function updateViewCount() {
-    const ref = db.ref('viewCount');
-    ref.transaction(current => (current || 0) + 1, (err, committed, snap) => {
-      if (committed) {
+    const now = Date.now();
+    const last = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+
+    if (now - last < THROTTLE_MS) {
+      // 限流内：只读当前值，不再 +1
+      db.ref('viewCount').once('value').then(snap => {
+        const v = String(snap.val() || 0).padStart(7, '0');
+        document.getElementById('view-count').textContent = v;
+      });
+    } else {
+      // 超过限流间隔：真正 +1
+      db.ref('viewCount').transaction(cur => (cur || 0) + 1, (err, committed, snap) => {
         const v = String(snap.val()).padStart(7, '0');
         document.getElementById('view-count').textContent = v;
-      } else {
-        document.getElementById('view-count').textContent = '0000000';
-      }
-    });
+        // 记录这次 +1 的时间
+        localStorage.setItem(STORAGE_KEY, now.toString());
+      });
+    }
   }
 
   document.addEventListener('DOMContentLoaded', updateViewCount);
