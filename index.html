@@ -41,6 +41,57 @@
     }
   </style>
 </head>
+
+   <!-- 在这里贴入，务必放在 </body> 之前 -->
+  <script>
+    // i18n 数据容器
+    let i18n = {};
+
+    // 1. 先去加载 translations.json（注意绝对路径）
+    fetch('/translations.json')
+      .then(resp => {
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        return resp.json();
+      })
+      .then(data => {
+        i18n = data;
+        // 默认设定日文，填充页面
+        applyLanguage('ja');
+        // 高亮 JP 按钮
+        document.querySelector('.lang-btn[data-lang="ja"]')
+                .classList.add('active');
+      })
+      .catch(err => console.error('i18n 加载失败:', err));
+
+    // 2. 点击按钮时切换语系
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const lang = btn.getAttribute('data-lang');
+        applyLanguage(lang);
+        // 切换 active 样式
+        document.querySelectorAll('.lang-btn')
+                .forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // 3. 根据指定 lang 把 data-i18n-key 填上对应文案
+    function applyLanguage(lang) {
+      document.querySelectorAll('[data-i18n-key]').forEach(el => {
+        const key = el.getAttribute('data-i18n-key');
+        const txt = i18n[lang] && i18n[lang][key];
+        if (txt !== undefined) {
+          el.textContent = txt;
+        } else {
+          console.warn(`Missing [${key}] for lang ${lang}`);
+        }
+      });
+    }
+  </script>
+
+
+
 <body>
 
   <!-- ← 确保这一段是真正的 HTML，不是在注释或 <pre> 里 -->
@@ -188,53 +239,7 @@
 <body>
 
 
-   <!-- 在这里贴入，务必放在 </body> 之前 -->
-  <script>
-    // i18n 数据容器
-    let i18n = {};
 
-    // 1. 先去加载 translations.json（注意绝对路径）
-    fetch('/translations.json')
-      .then(resp => {
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        return resp.json();
-      })
-      .then(data => {
-        i18n = data;
-        // 默认设定日文，填充页面
-        applyLanguage('ja');
-        // 高亮 JP 按钮
-        document.querySelector('.lang-btn[data-lang="ja"]')
-                .classList.add('active');
-      })
-      .catch(err => console.error('i18n 加载失败:', err));
-
-    // 2. 点击按钮时切换语系
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', e => {
-        e.preventDefault();
-        const lang = btn.getAttribute('data-lang');
-        applyLanguage(lang);
-        // 切换 active 样式
-        document.querySelectorAll('.lang-btn')
-                .forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-
-    // 3. 根据指定 lang 把 data-i18n-key 填上对应文案
-    function applyLanguage(lang) {
-      document.querySelectorAll('[data-i18n-key]').forEach(el => {
-        const key = el.getAttribute('data-i18n-key');
-        const txt = i18n[lang] && i18n[lang][key];
-        if (txt !== undefined) {
-          el.textContent = txt;
-        } else {
-          console.warn(`Missing [${key}] for lang ${lang}`);
-        }
-      });
-    }
-  </script>
 </body>
 </html>
 </body>
