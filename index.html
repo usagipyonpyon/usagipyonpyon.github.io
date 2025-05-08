@@ -1,99 +1,32 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <!-- …你的<head>内容… -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyon Profile</title>
+
+  <!-- 语言切换样式 -->
   <style>
-    /* 语言切换样式（只放一次） */
-    .lang-switcher {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      background: rgba(255,255,255,0.9);
-      padding: 4px 12px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      z-index: 1000;
-    }
-    .lang-switcher .lang-label {
-      font-weight: 600;
-      color: #333;
-    }
-    .lang-switcher .lang-btn {
-      text-decoration: none;
-      background: #fff;
-      color: #111;
-      padding: 2px 6px;
-      border-radius: 6px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      transition: background 0.2s;
-    }
-    .lang-switcher .lang-btn.active,
-    .lang-switcher .lang-btn:hover {
-      background: #eaeaea;
-    }
-    .lang-switcher .lang-sep {
-      color: #666;
-      user-select: none;
-    }
+    /* …你的 .lang-switcher 样式… */
   </style>
 
-
-  <!-- ★ 多语言脚本：加载 translations.json 并根据 data-i18n-key 填充内容 -->
+  <!-- ★ 多语言脚本：只定义函数，不绑定任何还未出现的元素 -->
   <script>
-    // 1. 全局容器，存放从 JSON 载入的所有文案
     let i18n = {};
-
-    // 2. 立即 fetch 根目录下的 translations.json
-    fetch('/translations.json')
-      .then(resp => {
-        if (!resp.ok) throw new Error('无法加载 translations.json：' + resp.status);
-        return resp.json();
-      })
-      .then(data => {
-        i18n = data;
-        // 默认显示日文
-        applyLanguage('ja');
-        // 给 JP 按钮加上高亮
-        const btnJa = document.querySelector('.lang-btn[data-lang="ja"]');
-        if (btnJa) btnJa.classList.add('active');
-      })
-      .catch(err => console.error('i18n 加载失败：', err));
-
-    // 3. 绑定按钮点击，切换语言
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', e => {
-        e.preventDefault();
-        const lang = btn.getAttribute('data-lang');
-        applyLanguage(lang);
-        // 切换按钮样式
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-
-    // 4. 核心：遍历所有带 data-i18n-key 的元素，替换 textContent
     function applyLanguage(lang) {
       document.querySelectorAll('[data-i18n-key]').forEach(el => {
         const key = el.getAttribute('data-i18n-key');
         const text = i18n[lang] && i18n[lang][key];
-        if (text !== undefined) {
-          el.textContent = text;
-        } else {
-          console.warn(`缺少翻译：key="${key}" lang="${lang}"`);
-        }
+        if (text !== undefined) el.textContent = text;
       });
     }
   </script>
-</body>
-</html>
 
+  <!-- Firebase SDK、字体等其他 head 内容 -->
 </head>
+
 <body>
-  <!-- ★ 语言切换按钮：放在 <body> 开头，确保它浮在最顶层 -->
+  <!-- ★ 语言切换按钮：确保它在 body 一打开就渲染 -->
   <div class="lang-switcher">
     <span class="lang-label" data-i18n-key="lang_label">Language:</span>
     <a href="#" class="lang-btn" data-lang="en" data-i18n-key="btn_en">EN</a>
@@ -103,6 +36,39 @@
     <a href="#" class="lang-btn" data-lang="zh" data-i18n-key="btn_zh">CN</a>
   </div>
 
+  <!-- ↓ 你的主体内容 ↓ -->
+  <div class="container">
+    <!-- banner, profile, links, 广告区 … -->
+  </div>
+
+  <!-- ★ 在这里真正去 fetch translations、绑定按钮事件 -->
+  <script>
+    // 1. 拉取 translations.json
+    fetch('/translations.json')
+      .then(r => r.json())
+      .then(data => {
+        i18n = data;
+        applyLanguage('ja');
+        document.querySelector('.lang-btn[data-lang="ja"]').classList.add('active');
+      })
+      .catch(console.error);
+
+    // 2. 绑定切换事件
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const lang = btn.getAttribute('data-lang');
+        applyLanguage(lang);
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+
+  <!-- Firebase 访客计数脚本、其它脚本… -->
+
+</body>
+</html>
   <!-- ↓ 下面才是你原有的页面主体内容 ↓ -->
   <div class="container">
     <!-- … banner, profile, links, 广告区 … -->
