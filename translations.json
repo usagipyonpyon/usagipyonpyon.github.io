@@ -1,6 +1,5 @@
 {
   "en": {
-    "lang_label": "Language:",
     "btn_en": "EN",
     "btn_ja": "JP",
     "btn_zh": "CN",
@@ -15,7 +14,6 @@
     "ad_text": "※Purchasing any work through the banners below earns me a referral fee!"
   },
   "ja": {
-    "lang_label": "言語：",
     "btn_en": "EN",
     "btn_ja": "JP",
     "btn_zh": "CN",
@@ -29,7 +27,6 @@
     "ad_text": "※以下のバナー経由でどんな作品でも購入すると、紹介料を頂けます！"
   },
   "zh": {
-    "lang_label": "语言：",
     "btn_en": "EN",
     "btn_ja": "JP",
     "btn_zh": "CN",
