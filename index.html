@@ -129,6 +129,43 @@
     [data-i18n-key] {
       white-space: pre-wrap;
      }
+.grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  gap: 16px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 24px;
+}
+.grid-layout .col {
+  background: rgba(255,255,255,0.8);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.grid-layout .col.intro {
+  text-align: center;
+}
+.grid-layout .col.buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.grid-layout .col.article h2 {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+  text-align: center;
+}
+.grid-layout .col.article p {
+  white-space: pre-wrap;     /* 保留 JSON 中的 \n 换行 */
+  line-height: 1.5;
+}
+@media (max-width: 768px) {
+  .grid-layout {
+    grid-template-columns: 1fr; /* 手机时单列 */
+  }
+}
+
   </style>
 </head>
 <body>
@@ -155,6 +192,20 @@
       <h1><p class="note" data-i18n-key="title"></p></h1>
       <p class="note" data-i18n-key="intro"></p>
 </p>
+  <!-- ↓ 新增三栏区域 ↓ -->
+  <section class="grid-layout">
+    <div class="col intro">
+      <h2 data-article-key="intro_heading">紹介</h2>
+    </div>
+    <div class="col buttons">
+      <ul class="links">
+        <!-- 你现有的 Discord/Patreon/… 按钮保留 -->
+      </ul>
+    </div>
+    <div class="col article">
+      <h2 data-article-key="article_heading">今月の作品発表</h2>
+      <p data-article-key="article_body"></p>
+    </div>
     </section>
     
     <!-- Links -->
@@ -162,6 +213,10 @@
       <li>
         <a href="https://discord.gg/7wfBNYqrYU" target="_blank">Discord</a>
         <p class="note" data-i18n-key="discord_note"></p>
+        </p>
+      <li>
+        <a href="t.me/usagi_pyonpyon_chat" target="_blank">telegram</a>
+        <p class="note" data-i18n-key="telegram_note"></p>
         </p>
       </li>
       <li>
@@ -262,5 +317,27 @@
     }
     document.addEventListener('DOMContentLoaded', updateViewCount);
   </script>
+<script>
+  // 页面加载后，再去读 articles.json，填充三栏区域
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch('./articles.json')
+      .then(r => {
+        if (!r.ok) throw new Error('articles.json ' + r.status);
+        return r.json();
+      })
+      .then(data => {
+        // 假设语言与 i18n 共用同一个 lang 变量，如果你已有 i18n.currentLang，就用它：
+        const lang = document.querySelector('.lang-btn.active')?.dataset.lang || 'ja';
+        // Intro
+        document.querySelectorAll('[data-article-key]').forEach(el => {
+          const key = el.getAttribute('data-article-key');
+          const txt = data[lang] && data[lang][key];
+          if (txt !== undefined) el.textContent = txt;
+        });
+      })
+      .catch(console.error);
+  });
+</script>
+
 </body>
 </html>
