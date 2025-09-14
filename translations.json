@@ -4,16 +4,17 @@
     "btn_ja": "JP",
     "btn_zh": "CN",
     "title": "PYON",
-    "intro": "👋👋Hey there! I’m PYON 🐰\nI use AI working characters.\n Commissions are open！\n Furry, male, game/anime characters, and more～ \n all welcome！ ✨💬\n\nOnce I receive enough support,\nI’ll start creating 2D Live animations with\nR18 voice acting 🎙️💕\n\nSupport me on Patreon 💝\nYour support helps me create more AI-generated content！",
+    "intro": "👋👋Hey there！ I’m PYON 🐰\nI use AI working characters.\n Commissions are open！\n Furry, male, game/anime characters, and more～ \n all welcome！ ✨💬\n\nOnce I receive enough support,\nI’ll start creating 2D Live animations with\nR18 voice acting 🎙️💕\n\nSupport me on Patreon 💝\nYour support helps me create more AI-generated content！",
     "support": "unpublished artworks here！\nKey member benefits are posted here upon joining！",
-    "discord_note": "Unpublished here! Member perks posted inside！",
-    "ling_note": "Emergency backup LINE group\n",
+    "discord_note": "Unpublished here！ Member perks posted inside！",
+    "ling_note": "You might be able to view paid content for free here~?👀\n",
     "BOOTH_note": "Purchase past works and place requests here！",
     "patreon_note": "NSFW/R18 artwork here！ ・ｘ・",
-    "afdian_note": "Support for Chinese audiences！",
+    "GUmroad_note": "Purchase past works and place requests！\nYou can buy the uncensored version here！",
     "pixiv_note": "Support site previews here！",
     "ad_title": "🔸 ADs 🔸",
-    "ad_text": "※Purchasing any work through the banners below earns me a referral fee!"
+    "ad_text": "※Purchasing any work through the banners below earns me a referral fee！\n If you click someone else’s DLSITE ad, it will become invalid.
+\nA single click typically remains effective for about 20 days."
   },
   "ja": {
     "btn_en": "EN",
@@ -22,13 +23,13 @@
     "title": "ぴょん",
     "intro": "👋👋こんにちは！PYONです🐰\nAI使って色んなキャラクターを作ってます！\n依頼も受付中！\nケモノ、男性キャラ、ゲームやアニメなど何でもOK✨💬\n\nご支援が集まり次第\nボイス×2DLIVEアニメも頑張ります🎙️💕\nPatreonで応援お願いします💝\nあなたのサポートが\nすんごい応援になります！",
     "discord_note": "未公開などのはこちら！\nメンバー特典も",
-    "ling_note": "\n",
+    "ling_note": "ここでは有料内容を無料で見れるかも～？👀\n",
     "BOOTH_note": "過去作品の購入とリクエストの注文はここに！",
     "patreon_note": "NSFW/R18作品はこちら！・ｘ・",
-    "afdian_note": "中国向けサポートサイト！",
+    "GUmroad_note": "過去作品の購入とリクエスト請求はここに！\nここではモザイク無しの絵を買えます！",
     "pixiv_note": "支援サイトのプレビュー！",
     "ad_title": "🔸 ADs 🔸",
-    "ad_text": "※以下のバナー経由でどんな作品でも購入すると\n紹介料を頂けます！"
+    "ad_text": "※以下のバナー経由でどんな作品でも購入すると\n紹介料を頂けます！\n*他のDLサイトバナークリックすると効果消えます\nバナー押してから20日ぐらいまでは効果続きます"
   },
   "zh": {
     "btn_en": "EN",
@@ -37,15 +38,16 @@
     "title": "PYON",
     "intro": "👋嗨～我是 PYON 🐰\n使用AI繪圖生成人像角色插圖！\n目前開放委託中✨\n\n獸耳、男性角色、遊戲/動畫角色等通通歡迎✨💬\n\n一旦達成一定支持門檻\n會開始製作R18語音×2D Live動畫🎙️💕\n\n歡迎到 Patreon 支持我 💝\n你的支持，將推動更多AI創作的誕生！",
     "discord_note": "未公開圖片在這裡！\n會員福利也在此！",
-    "ling_note": "\n",
+    "ling_note": "在這裡可能可以免費看到付費內容喔～？👀\n",
     "BOOTH_note": "過去作品的購入以及訂製作品的下單都在這！",
     "patreon_note": "NSFW/R18 作品在此展示！・ｘ・",
-    "afdian_note": "中國用戶支援網站！\n這邊審查比較嚴格\n加入後還請至DC找我索取檔案",
+    "GUmroad_note": "過去作品跟想定製作品的下單都在這！\n 這邊可以買到無馬賽克版本！",
     "pixiv_note": "支援網站的預覽等等的！",
     "ad_title": "🔸 ADs 🔸",
-    "ad_text": "※點擊看板後購買任意作品\n可以讓我獲得介紹費！"
+    "ad_text": "※點擊看板後購買任意作品\n可以讓我獲得介紹費！\n如果點擊其他人的DLSITE廣告的話會失效\n一次點擊大概能夠持續20天左右"
   }
 }
+
 
 
 
